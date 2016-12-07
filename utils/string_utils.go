@@ -27,7 +27,23 @@ func JoinJSON(inputs ...string) string {
 		children, _ := jsonParsed.S().ChildrenMap()
 
 		for key, child := range children {
-			result.Set(child.Data(), key)
+			value := child.Data()
+			stringValue := child.String()
+			// check if the value is again json or a primitive type
+			if strings.Index(stringValue, "{") == 0 || strings.Index(stringValue, "[") == 0 {
+				// if the value is JSON and we already have value for that key in the result
+				existingValue := result.S(key).String()
+				if existingValue == "{}" {
+					result.Set(value, key)
+				} else {
+					// merge the inner JSONs
+					joinedResult := JoinJSON(existingValue, stringValue)
+					valueToStore, _ := gabs.ParseJSON([]byte(joinedResult))
+					result.Set(valueToStore.Data(), key)
+				}
+			} else {
+				result.Set(value, key)
+			}
 		}
 	}
 
@@ -43,7 +59,7 @@ func JoinContent(value1 string, value2 string) string {
 	} else if (IsJSON(value1)) && IsJSON(value2) {
 		return JoinJSON(value1, value2)
 	} else {
-		return value1 + value2
+		return value1 + "\n" + value2
 	}
 }
 

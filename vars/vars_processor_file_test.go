@@ -9,6 +9,7 @@ import (
 
 	"github.com/jmartin82/mmock/definition"
 	"github.com/jmartin82/mmock/persist"
+	"github.com/jmartin82/mmock/utils"
 	"github.com/jmartin82/mmock/vars/fakedata"
 )
 
@@ -164,6 +165,65 @@ func TestFilePersister_LoadBody(t *testing.T) {
 		if mock.Response.Body != fileContent {
 			t.Error("Result body and file content should be the same", mock.Response.Body, fileContent)
 		}
+	}
+}
+
+func TestFilePersister_EmptyCollection(t *testing.T) {
+	req := definition.Request{}
+	res := definition.Response{Body: "{{ persist.collection.content }}"}
+	per := definition.Persist{Collection: "users"}
+
+	persistPath, _ := filepath.Abs("./test_persist")
+	defer os.RemoveAll(persistPath)
+
+	os.RemoveAll(persistPath)
+
+	varsProcessor := getFileProcessor(persistPath)
+	mock := definition.Mock{Request: req, Response: res, Persist: per}
+
+	varsProcessor.Eval(&req, &mock)
+
+	if mock.Response.Body != "[]" {
+		t.Error("The result should be empty array", mock.Response.Body)
+	}
+}
+
+func TestFilePersister_NonEmptyCollection(t *testing.T) {
+	req := definition.Request{}
+	res := definition.Response{Body: "{{ persist.collection.content }}"}
+	per := definition.Persist{Collection: "users"}
+
+	persistPath, _ := filepath.Abs("./test_persist")
+	defer os.RemoveAll(persistPath)
+
+	os.RemoveAll(persistPath)
+
+	varsProcessor := getFileProcessor(persistPath)
+	mock := definition.Mock{Request: req, Response: res, Persist: per}
+
+	os.MkdirAll(path.Join(persistPath, "users"), 0755)
+
+	filePath1 := path.Join(persistPath, "users/file1.json")
+	filePath2 := path.Join(persistPath, "users/file2.json")
+
+	fileContent1 := "Body to expect 1"
+	fileContent2 := "Body to expect 2"
+
+	err := ioutil.WriteFile(filePath1, []byte(fileContent1), 0755)
+	if err != nil {
+		t.Error("File should be written", err)
+		return
+	}
+	err = ioutil.WriteFile(filePath2, []byte(fileContent2), 0755)
+	if err != nil {
+		t.Error("File should be written", err)
+		return
+	}
+
+	varsProcessor.Eval(&req, &mock)
+
+	if mock.Response.Body != utils.JoinContent(fileContent1, fileContent2) {
+		t.Error("Result body and joined file contents should be the same", mock.Response.Body, utils.JoinContent(fileContent1, fileContent2))
 	}
 }
 

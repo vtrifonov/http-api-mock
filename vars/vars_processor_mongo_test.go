@@ -335,6 +335,68 @@ func TestMongoPersister_LoadBodyNonJSON(t *testing.T) {
 	}
 }
 
+func TestMongoPersister_EmptyCollection(t *testing.T) {
+	if !hasConnection(t) {
+		return
+	}
+
+	req := definition.Request{}
+	res := definition.Response{Body: "{{ persist.collection.content }}"}
+	per := definition.Persist{Collection: "users"}
+
+	varsProcessor, persister := getMongoProcessor()
+	defer func() {
+		dropDatabase(persister.Repository) // cleanup database
+	}()
+	dropDatabase(persister.Repository) // make sure we are working on a clean database
+
+	mock := definition.Mock{Request: req, Response: res, Persist: per}
+
+	varsProcessor.Eval(&req, &mock)
+
+	if mock.Response.Body != "[]" {
+		t.Error("The result should be empty array", mock.Response.Body)
+	}
+}
+
+func TestMongoPersister_NonEmptyCollection(t *testing.T) {
+	if !hasConnection(t) {
+		return
+	}
+
+	req := definition.Request{}
+	res := definition.Response{Body: "{{ persist.collection.content }}"}
+	per := definition.Persist{Collection: "users"}
+
+	varsProcessor, persister := getMongoProcessor()
+	defer func() {
+		dropDatabase(persister.Repository) // cleanup database
+	}()
+	dropDatabase(persister.Repository) // make sure we are working on a clean database
+
+	mock := definition.Mock{Request: req, Response: res, Persist: per}
+
+	content1 := "Body to expect 1"
+	content2 := "Body to expect 2"
+
+	err := persister.Repository.UpsertItem("users", "content1", content1)
+	if err != nil {
+		t.Error("Item should be saved", err)
+		return
+	}
+	err = persister.Repository.UpsertItem("users", "content2", content2)
+	if err != nil {
+		t.Error("Item should be saved", err)
+		return
+	}
+
+	varsProcessor.Eval(&req, &mock)
+
+	if mock.Response.Body != utils.JoinContent(content1, content2) {
+		t.Error("Result body and joined file contents should be the same", mock.Response.Body, utils.JoinContent(content1, content2))
+	}
+}
+
 func TestMongoPersister_LoadBody_WithAppend(t *testing.T) {
 	if !hasConnection(t) {
 		return

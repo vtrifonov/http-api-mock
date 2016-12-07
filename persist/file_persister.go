@@ -165,6 +165,11 @@ func (fp FilePersister) getFilesInCollection(collectionName string) []string {
 		return []string{}
 	}
 
+	_, err := os.Stat(fullFolderPath)
+	if err != nil && os.IsNotExist(err) {
+		return filesList
+	}
+
 	regex, regexError := regexp.Compile(filter)
 
 	filepath.Walk(fullFolderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
