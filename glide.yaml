@@ -2,6 +2,7 @@ package: github.com/vtrifonov/http-api-mock
 import:
 - package: github.com/Jeffail/gabs
   version: ^1.0.0
+- package: github.com/azer/url-router
 - package: github.com/elazarl/go-bindata-assetfs
 - package: github.com/fsnotify/fsnotify
   version: ^1.4.2
