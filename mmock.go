@@ -4,13 +4,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"net"
 	"path/filepath"
 	"strings"
 
 	"github.com/jmartin82/mmock/console"
 	"github.com/jmartin82/mmock/definition"
+	"github.com/jmartin82/mmock/logging"
 	"github.com/jmartin82/mmock/match"
 	"github.com/jmartin82/mmock/notify"
 	"github.com/jmartin82/mmock/persist"
@@ -61,7 +61,7 @@ func getOutboundIP() string {
 	}
 	defer conn.Close()
 
-	log.Println("Getting external IP")
+	logging.Println("Getting external IP")
 	localAddr := conn.LocalAddr().String()
 	idx := strings.LastIndex(localAddr, ":")
 
@@ -69,7 +69,7 @@ func getOutboundIP() string {
 }
 
 func getRouter(mocks []definition.Mock, dUpdates chan []definition.Mock) *route.RequestRouter {
-	log.Printf("Loding router with %d definitions\n", len(mocks))
+	logging.Printf("Loding router with %d definitions\n", len(mocks))
 	router := route.NewRouter(mocks, match.MockMatch{}, dUpdates)
 	router.MockChangeWatch()
 	return router
@@ -92,7 +92,7 @@ func getVarsProcessor(persistEngineBag *persist.PersistEngineBag) vars.VarsProce
 	return vars.VarsProcessor{FillerFactory: vars.MockFillerFactory{}, FakeAdapter: fakedata.FakeAdapter{}, PersistEngines: persistEngineBag}
 }
 
-func startServer(ip string, port int, done chan bool, router route.Router, mLog chan definition.Match, varsProcessor vars.VarsProcessor) {
+func startServer(ip string, port int, done chan bool, router route.Router, mLog chan definition.Match, varsProcessor vars.VarsProcessor, logs chan string) {
 	dispatcher := server.Dispatcher{IP: ip,
 		Port:          port,
 		Router:        router,
@@ -100,18 +100,19 @@ func startServer(ip string, port int, done chan bool, router route.Router, mLog 
 		VarsProcessor: varsProcessor,
 		Mlog:          mLog,
 		Notifier:      notify.NewMockNotifier(),
+		Logs:          logs,
 	}
 	dispatcher.Start()
 	done <- true
 }
-func startConsole(ip string, port int, done chan bool, mLog chan definition.Match) {
-	dispatcher := console.Dispatcher{IP: ip, Port: port, Mlog: mLog}
+func startConsole(ip string, port int, done chan bool, mLog chan definition.Match, logs chan string) {
+	dispatcher := console.Dispatcher{IP: ip, Port: port, Mlog: mLog, Logs: logs}
 	dispatcher.Start()
 	done <- true
 }
 
 func getMocks(path string, updateCh chan []definition.Mock) []definition.Mock {
-	log.Printf("Reading Mock definition from: %s\n", path)
+	logging.Printf("Reading Mock definition from: %s\n", path)
 
 	definitionReader := definition.NewFileDefinition(path, updateCh)
 
@@ -120,7 +121,7 @@ func getMocks(path string, updateCh chan []definition.Mock) []definition.Mock {
 
 	mocks := definitionReader.ReadMocksDefinition()
 	if len(mocks) == 0 {
-		log.Fatalln(ErrNotFoundAnyMock.Error())
+		logging.Fatalln(ErrNotFoundAnyMock.Error())
 	}
 	definitionReader.WatchDir()
 	return mocks
@@ -154,6 +155,7 @@ func main() {
 
 	//chanels
 	mLog := make(chan definition.Match)
+	logs := make(chan string)
 	dUpdates := make(chan []definition.Mock)
 	done := make(chan bool)
 
@@ -162,14 +164,18 @@ func main() {
 
 	persistEngineBag := loadVarsProcessorEngines(persistPath)
 	varsProcessor := getVarsProcessor(persistEngineBag)
-	go startServer(*sIP, *sPort, done, router, mLog, varsProcessor)
+
+	go startServer(*sIP, *sPort, done, router, mLog, varsProcessor, logs)
 
 	utils.SetServerAddress(fmt.Sprintf("http://%s:%d", *sIP, *sPort))
 
-	log.Printf("HTTP Server running at %s\n", utils.GetServerAddress())
+	logging.Printf("HTTP Server running at %s\n", utils.GetServerAddress())
+
 	if *console {
-		go startConsole(*cIP, *cPort, done, mLog)
-		log.Printf("Console running at http://%s:%d\n", *cIP, *cPort)
+		go startConsole(*cIP, *cPort, done, mLog, logs)
+		logging.Printf("Console running at http://%s:%d\n", *cIP, *cPort)
+
+		logging.SetLogger(logging.ChannelLogger{ChannelLog: logs})
 	}
 
 	<-done

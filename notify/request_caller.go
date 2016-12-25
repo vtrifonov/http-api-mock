@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/jmartin82/mmock/definition"
+	"github.com/jmartin82/mmock/logging"
 	"github.com/jmartin82/mmock/utils"
 )
 
@@ -22,7 +22,7 @@ func (caller RequestCaller) Call(request definition.Request) bool {
 
 	requestURL, err := url.Parse(request.Path)
 	if err != nil {
-		log.Printf("Invalid url(%s) passed: %s", request.Path, err)
+		logging.Printf("Invalid url(%s) passed: %s", request.Path, err)
 		return false
 	}
 
@@ -32,7 +32,7 @@ func (caller RequestCaller) Call(request definition.Request) bool {
 
 	req, err := http.NewRequest(request.Method, request.Path, bytes.NewBufferString(request.Body))
 	if err != nil {
-		log.Printf("Error creating http request: %s", err)
+		logging.Printf("Error creating http request: %s", err)
 		return false
 	}
 
@@ -52,11 +52,11 @@ func (caller RequestCaller) Call(request definition.Request) bool {
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	if err != nil {
-		log.Printf("Error executing request to %s. Error: %s", request.Path, err)
+		logging.Printf("Error executing request to %s. Error: %s", request.Path, err)
 		return false
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	log.Printf("Request to %s returned status code %d and body: %s", request.Path, resp.StatusCode, body)
+	logging.Printf("Request to %s returned status code %d and body: %s", request.Path, resp.StatusCode, body)
 	return true
 }

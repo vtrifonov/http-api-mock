@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 	"reflect"
 
 	"github.com/jmartin82/mmock/definition"
+	"github.com/jmartin82/mmock/logging"
 	"github.com/jmartin82/mmock/notify"
 	"github.com/jmartin82/mmock/proxy"
 	"github.com/jmartin82/mmock/route"
@@ -27,6 +27,7 @@ type Dispatcher struct {
 	VarsProcessor vars.VarsProcessor
 	Notifier      notify.Notifier
 	Mlog          chan definition.Match
+	Logs          chan string
 }
 
 func (di Dispatcher) recordMatchData(msg definition.Match) {
@@ -51,7 +52,7 @@ func (di *Dispatcher) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printf("New request: %s %s\n", req.Method, req.URL.String())
+	logging.Printf("New request: %s %s\n", req.Method, req.URL.String())
 	result := definition.Result{}
 	mock, errs := di.Router.Route(&mRequest)
 	if errs == nil {
@@ -61,7 +62,7 @@ func (di *Dispatcher) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		result.Errors = errs
 	}
 
-	log.Printf("Mock match found: %s. Name : %s\n", strconv.FormatBool(result.Found), mock.Name)
+	logging.Printf("Mock match found: %s. Name : %s\n", strconv.FormatBool(result.Found), mock.Name)
 
 	if result.Found {
 		if len(mock.Control.ProxyBaseURL) > 0 {
@@ -76,11 +77,11 @@ func (di *Dispatcher) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			}
 
 			if mock.Control.Crazy {
-				log.Printf("Running crazy mode")
+				logging.Printf("Running crazy mode")
 				mock.Response.StatusCode = di.randomStatusCode(mock.Response.StatusCode)
 			}
 			if mock.Control.Delay > 0 {
-				log.Printf("Adding a delay")
+				logging.Printf("Adding a delay")
 				time.Sleep(time.Duration(mock.Control.Delay) * time.Second)
 			}
 			response = mock.Response
@@ -104,6 +105,6 @@ func (di Dispatcher) Start() {
 
 	err := http.ListenAndServe(addr, &di)
 	if err != nil {
-		log.Fatalf("ListenAndServe: " + err.Error())
+		logging.Fatalf("ListenAndServe: " + err.Error())
 	}
 }
