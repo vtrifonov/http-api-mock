@@ -1,5 +1,6 @@
 HTTP API Mock 
 =========
+[![Build Status](https://travis-ci.org/vtrifonov/http-api-mock.svg?branch=master)](https://travis-ci.org/vtrifonov/http-api-mock)
 
 HTTP API Mock is a fork of [MMock](https://github.com/jmartin82/mmock)
 
