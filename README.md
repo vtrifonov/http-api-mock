@@ -1,18 +1,20 @@
-Mmock 
+HTTP API Mock 
 =========
 
-Mmock is a testing and fast prototyping tool for developers:
+HTTP API Mock is a fork of [MMock](https://github.com/jmartin82/mmock)
+
+HTTP API Mock is a testing and fast prototyping tool for developers:
 
 Easy and fast HTTP mock server.
 
-* Download Mmock
+* Download HTTP API Mock
 * Create a mock definition.
-* Configure your application endpoints to use Mmock
+* Configure your application endpoints to use HTTP API Mock
 * Receive the expected responses
 * Inspect the requests in the web UI
 * Release it to a real server
 
-Built with Go - Mmock runs without installation on multiple platforms.
+Built with Go - HTTP API Mock runs without installation on multiple platforms.
 
 ### Features
 
@@ -76,30 +78,19 @@ You can see more complex examples [here](/config).
 
 ### Getting started
 
-Either:
-
-Run it from Docker using the provided ```Dockerfile``` or [from Docker Hub](https://hub.docker.com/r/jordimartin/mmock/)
+To run HTTP API Mock locally from the command line. 
 
 ```
 go get github.com/vtrifonov/http-api-mock
-docker build -t mmock/mmock .
-docker run -v YOUR_ABS_PATH:/config -p 8082:8082 -p 8083:8083  mmock/mmock
-```
-
-
-Or run mmock locally from the command line. 
-
-```
-go get github.com/vtrifonov/http-api-mock
-mmock -h
+http-api-mock -h
 
 ```
 
-To configure Mmock, use command line flags described in help.
+To configure HTTP API Mock, use command line flags described in help.
 
 
 ```
-    Usage of ./mmock:
+    Usage of ./http-api-mock:
       -cconsole-port int
           Console server Port (default 8082)
       -config-path string
@@ -361,7 +352,7 @@ If you want to use that mode you need to pass the path to the folder where you w
 
 To use MongoDB persistence you need to set the url connection string to the **config-persist-path**. The format of that url should be in the following format:  
 `mongodb://[user:pass@]host1[:port1][,host2[:port2],...]/database`  
-For example if you are using your local mongo the connection string might be **`mongodb://localhost/mmock`**. In this mode the entity name in the [Persist](#persist-optional) define in which collection and with what ID the records to be stored and retrieved from. To achieve this the names should be in the following format:  
+For example if you are using your local mongo the connection string might be **`mongodb://localhost/http-api-mock`**. In this mode the entity name in the [Persist](#persist-optional) define in which collection and with what ID the records to be stored and retrieved from. To achieve this the names should be in the following format:  
 `collectionName/itemId`
 
 You can check the sample configurations for persistence in the following files:
@@ -384,6 +375,7 @@ If you make any changes, run ```go fmt ./...``` before submitting a pull request
 
 ### Licence
 
-Copyright ©‎ 2016 - 2017, Jordi Martín (http://jordi.io)
+Original work Copyright (c) 2016 - 2017 [Jordi Martin](http://jordi.io)
+Modified work Copyright 2016 - 2017 [Vasil Trifonov](https://github.com/vtrifonov)
 
 Released under MIT license, see [LICENSE](LICENSE.md) for details.
