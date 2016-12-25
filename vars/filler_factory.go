@@ -8,7 +8,7 @@ import (
 )
 
 type FillerFactory interface {
-	CreateRequestFiller(req *definition.Request) Filler
+	CreateRequestFiller(req *definition.Request, mock *definition.Mock) Filler
 	CreateFakeFiller(Fake fakedata.DataFaker) Filler
 	CreateStorageFiller(Engines *persist.PersistEngineBag) Filler
 	CreatePersistFiller(Engines *persist.PersistEngineBag) Filler
@@ -16,8 +16,8 @@ type FillerFactory interface {
 
 type MockFillerFactory struct{}
 
-func (mff MockFillerFactory) CreateRequestFiller(req *definition.Request) Filler {
-	return RequestVars{Request: req, RegexHelper: utils.RegexHelper{}}
+func (mff MockFillerFactory) CreateRequestFiller(req *definition.Request, mock *definition.Mock) Filler {
+	return RequestVars{Request: req, Mock: mock, RegexHelper: utils.RegexHelper{}}
 }
 
 func (mff MockFillerFactory) CreateFakeFiller(fake fakedata.DataFaker) Filler {

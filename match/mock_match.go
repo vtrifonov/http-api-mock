@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	urlmatcher "github.com/azer/url-router"
 	"github.com/ryanuber/go-glob"
 	"github.com/vtrifonov/http-api-mock/definition"
 )
@@ -69,8 +70,12 @@ func mockIncludesMethod(mock *definition.Request, method string) bool {
 }
 
 func (mm MockMatch) Match(req *definition.Request, mock *definition.Request) (bool, error) {
+	routes := urlmatcher.New(mock.Path)
+
 	if !glob.Glob(mock.Path, req.Path) {
-		return false, ErrPathNotMatch
+		if routes.Match(req.Path) == nil {
+			return false, ErrPathNotMatch
+		}
 	}
 
 	if !mockIncludesMethod(mock, req.Method) {

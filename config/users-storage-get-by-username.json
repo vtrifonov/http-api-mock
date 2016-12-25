@@ -2,10 +2,10 @@
     "description": "Getting the stored user by username",
     "request": {
         "method": "GET",
-        "path": "/storage-users-by-username/*"
+        "path": "/storage-users-by-username/:userName"
     },
     "persist": {
-        "entity": "/storage-users/user-{{ storage.GetValue({{ request.url./storage-users-by-username/(?P<value>.+) }}) }}.json"
+        "entity": "/storage-users/user-{{ storage.GetValue({{ request.path.userName }}) }}.json"
     },
     "response": {
         "statusCode": 202,

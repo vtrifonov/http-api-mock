@@ -2,10 +2,10 @@
     "description": "Getting the stored user by id",
     "request": {
         "method": "GET",
-        "path": "/storage-users-by-id/*"
+        "path": "/storage-users-by-id/:userId"
     },
     "persist": {
-        "entity": "/storage-users/user-{{ request.url./storage-users-by-id/(?P<value>\\d+) }}.json"
+        "entity": "/storage-users/user-{{ request.path.userId }}.json"
     },
     "response": {
         "statusCode": 202,

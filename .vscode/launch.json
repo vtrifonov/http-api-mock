@@ -20,7 +20,7 @@
             "request": "launch",
             "mode": "test",
             "remotePath": "",
-            "program": "${workspaceRoot}/match",
+            "program": "${workspaceRoot}/vars",
             "env": {},
             "args": [],
             "showLog": true

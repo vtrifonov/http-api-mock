@@ -52,6 +52,18 @@ func TestGlobPath(t *testing.T) {
 	}
 }
 
+func TestRouteParametersPath(t *testing.T) {
+	hreq := &definition.Request{}
+	hreq.Path = "/a/b/c"
+	mreq := &definition.Request{}
+	mreq.Path = "/a/:b/:c"
+	m := MockMatch{}
+
+	if m, err := m.Match(hreq, mreq); !m {
+		t.Error(err)
+	}
+}
+
 func TestMatchQueryString(t *testing.T) {
 
 	hreq := &definition.Request{}

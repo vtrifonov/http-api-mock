@@ -24,6 +24,7 @@ Built with Go - HTTP API Mock runs without installation on multiple platforms.
 * Persist request body and load response from file or MongoDB
 * Ability to send message to AMQP server
 * Glob matching ( /a/b/* )
+* Route patterns may include named parameters (/hello/:name). Using [url-router](https://github.com/azer/url-router)
 * Match request by method, URL params, headers, cookies and bodies.
 * Mock definitions hot replace (edit your mocks without restart)
 * Web interface to view requests data (method,path,headers,cookies,body,etc..)
@@ -115,7 +116,7 @@ Mock definition:
 	"description": "Some text that describes the intended usage of the current configuration",
 	"request": {
 		"method": "GET|POST|PUT|PATCH|...",
-		"path": "/your/path/*",
+		"path": "/your/path/:variable",
 		"queryStringParameters": {
 			"name": ["value"],
 			"name": ["value", "value"]
@@ -140,7 +141,7 @@ Mock definition:
 		
 	},
 	"persist" : {
-		"entity" : "/users/user-{{request.url./your/path/(?P<value>\\d+)}}.json",
+		"entity" : "/users/user-{{ reques.path.variable }}.json",
 		"collection" : "users",
         "actions"{
 			"delete":"true",
@@ -269,6 +270,7 @@ Request data:
 
  - request.query."*key*"
  - request.cookie."*key*"
+ - request.path."*key*"
  - request.url
  - request.body
  - response.body
@@ -337,7 +339,7 @@ Request data:
   
  - fake.Int(n) - random positive integer less than or equal to n
  - fake.Float(n) - random positive floating point number less than n
- - fake.UUID - generates a unique id  
+ - fake.UUID - generates a [unique id](https://github.com/twinj/uuid)  
 
 ### Persistence
 

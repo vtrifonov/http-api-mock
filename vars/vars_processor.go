@@ -13,7 +13,7 @@ type VarsProcessor struct {
 }
 
 func (fp VarsProcessor) Eval(req *definition.Request, m *definition.Mock) {
-	requestFiller := fp.FillerFactory.CreateRequestFiller(req)
+	requestFiller := fp.FillerFactory.CreateRequestFiller(req, m)
 	fakeFiller := fp.FillerFactory.CreateFakeFiller(fp.FakeAdapter)
 	storageFiller := fp.FillerFactory.CreateStorageFiller(fp.PersistEngines)
 	persistFiller := fp.FillerFactory.CreatePersistFiller(fp.PersistEngines)

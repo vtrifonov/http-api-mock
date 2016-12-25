@@ -2,10 +2,10 @@
     "description": "Gets a persisted entity by matching the id from the url using regex",
     "request":{  
         "method":"GET",
-        "path":"/users/*.json"
+        "path":"/users/:userId"
     },
     "persist":{  
-        "entity":"/users/user-{{request.url./users/(?P<value>\\d+)}}.json"
+        "entity":"/users/user-{{ request.path.userId }}.json"
     },
     "response":{  
         "statusCode":200,
