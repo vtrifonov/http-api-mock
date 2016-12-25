@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/utils"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/utils"
 )
 
 type RequestVars struct {

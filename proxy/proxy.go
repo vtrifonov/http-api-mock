@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
 )
 
 // Proxy calls to real service

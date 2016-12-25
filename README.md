@@ -81,7 +81,7 @@ Either:
 Run it from Docker using the provided ```Dockerfile``` or [from Docker Hub](https://hub.docker.com/r/jordimartin/mmock/)
 
 ```
-go get github.com/jmartin82/mmock
+go get github.com/vtrifonov/http-api-mock
 docker build -t mmock/mmock .
 docker run -v YOUR_ABS_PATH:/config -p 8082:8082 -p 8083:8083  mmock/mmock
 ```
@@ -90,7 +90,7 @@ docker run -v YOUR_ABS_PATH:/config -p 8082:8082 -p 8083:8083  mmock/mmock
 Or run mmock locally from the command line. 
 
 ```
-go get github.com/jmartin82/mmock
+go get github.com/vtrifonov/http-api-mock
 mmock -h
 
 ```
@@ -376,7 +376,7 @@ That configurations are going to work either with [File system](#file-system) or
 
 ### Contributing
 
-Clone this repository to ```$GOPATH/src/github.com/jmartin82/mmock``` and type ```go get .```.
+Clone this repository to ```$GOPATH/src/github.com/vtrifonov/http-api-mock``` and type ```go get .```.
 
 Requires Go 1.4+ to build.
 

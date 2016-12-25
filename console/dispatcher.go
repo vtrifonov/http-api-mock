@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/elazarl/go-bindata-assetfs"
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
 	"golang.org/x/net/websocket"
 )
 
