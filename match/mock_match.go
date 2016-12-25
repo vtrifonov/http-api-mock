@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/vtrifonov/http-api-mock/definition"
 	"github.com/ryanuber/go-glob"
+	"github.com/vtrifonov/http-api-mock/definition"
 )
 
 var (
