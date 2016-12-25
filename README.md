@@ -360,9 +360,6 @@ You can check the sample configurations for persistence in the following files:
 
 That configurations are going to work either with [File system](#file-system) or [MongoDB](#mongodb) modes.
 
-### Contributors
-- [@vtrifonov](https://github.com/vtrifonov) [Persistence](#persist-optional) and [Notification](#notify-optional) features and improved variables support
-
 ### Contributing
 
 Clone this repository to ```$GOPATH/src/github.com/vtrifonov/http-api-mock``` and type ```go get .```.
