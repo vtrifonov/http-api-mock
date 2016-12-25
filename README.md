@@ -373,7 +373,7 @@ If you make any changes, run ```go fmt ./...``` before submitting a pull request
 
 ### Licence
 
-Original work Copyright (c) 2016 - 2017 [Jordi Martin](http://jordi.io)
+Original work Copyright (c) 2016 - 2017 [Jordi Martin](http://jordi.io)  
 Modified work Copyright 2016 - 2017 [Vasil Trifonov](https://github.com/vtrifonov)
 
 Released under MIT license, see [LICENSE](LICENSE.md) for details.
