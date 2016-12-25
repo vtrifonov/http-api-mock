@@ -1,0 +1,21 @@
+package: github.com/vtrifonov/http-api-mock
+import:
+- package: github.com/Jeffail/gabs
+  version: ^1.0.0
+- package: github.com/elazarl/go-bindata-assetfs
+- package: github.com/fsnotify/fsnotify
+  version: ^1.4.2
+- package: github.com/ghodss/yaml
+- package: github.com/icrowley/fake
+- package: github.com/ryanuber/go-glob
+  version: ^0.1.0
+- package: github.com/streadway/amqp
+- package: github.com/tidwall/sjson
+- package: github.com/twinj/uuid
+  version: ^0.10.0
+- package: golang.org/x/net
+  subpackages:
+  - websocket
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
