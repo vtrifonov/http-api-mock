@@ -3,7 +3,7 @@ package translate
 import (
 	"net/http"
 
-	"github.com/jmartin82/mmock/definition"
+	"github.com/vtrifonov/http-api-mock/definition"
 )
 
 //MockRequestBuilder defines the translator from http.Request to definition.Request

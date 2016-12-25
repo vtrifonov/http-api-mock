@@ -3,9 +3,9 @@ package amqp
 import (
 	"time"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
 	"github.com/streadway/amqp"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
 )
 
 //MessageSender sends message

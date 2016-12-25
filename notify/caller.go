@@ -1,6 +1,6 @@
 package notify
 
-import "github.com/jmartin82/mmock/definition"
+import "github.com/vtrifonov/http-api-mock/definition"
 
 //Caller makes remote http requests
 type Caller interface {

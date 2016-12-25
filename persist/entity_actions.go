@@ -1,9 +1,9 @@
 package persist
 
 import (
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/utils"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/utils"
 )
 
 //FilePersister persists body in file

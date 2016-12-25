@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jmartin82/mmock/definition"
+	"github.com/vtrifonov/http-api-mock/definition"
 	"github.com/ryanuber/go-glob"
 )
 

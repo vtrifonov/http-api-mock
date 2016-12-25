@@ -9,13 +9,13 @@ import (
 
 	"reflect"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/notify"
-	"github.com/jmartin82/mmock/proxy"
-	"github.com/jmartin82/mmock/route"
-	"github.com/jmartin82/mmock/translate"
-	"github.com/jmartin82/mmock/vars"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/notify"
+	"github.com/vtrifonov/http-api-mock/proxy"
+	"github.com/vtrifonov/http-api-mock/route"
+	"github.com/vtrifonov/http-api-mock/translate"
+	"github.com/vtrifonov/http-api-mock/vars"
 )
 
 //Dispatcher is the mock http server

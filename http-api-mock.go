@@ -8,18 +8,18 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jmartin82/mmock/console"
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/match"
-	"github.com/jmartin82/mmock/notify"
-	"github.com/jmartin82/mmock/persist"
-	"github.com/jmartin82/mmock/route"
-	"github.com/jmartin82/mmock/server"
-	"github.com/jmartin82/mmock/translate"
-	"github.com/jmartin82/mmock/utils"
-	"github.com/jmartin82/mmock/vars"
-	"github.com/jmartin82/mmock/vars/fakedata"
+	"github.com/vtrifonov/http-api-mock/console"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/match"
+	"github.com/vtrifonov/http-api-mock/notify"
+	"github.com/vtrifonov/http-api-mock/persist"
+	"github.com/vtrifonov/http-api-mock/route"
+	"github.com/vtrifonov/http-api-mock/server"
+	"github.com/vtrifonov/http-api-mock/translate"
+	"github.com/vtrifonov/http-api-mock/utils"
+	"github.com/vtrifonov/http-api-mock/vars"
+	"github.com/vtrifonov/http-api-mock/vars/fakedata"
 )
 
 //ErrNotFoundDefaultPath if we can't resolve the current path
@@ -29,7 +29,7 @@ var ErrNotFoundDefaultPath = errors.New("We can't determinate the current path")
 var ErrNotFoundAnyMock = errors.New("No valid mock definition found")
 
 func banner() {
-	fmt.Println("MMock v 1.0.0")
+	fmt.Println("HTTP API Mock v 1.0.0")
 	fmt.Println("")
 
 	fmt.Print(
@@ -136,7 +136,7 @@ func main() {
 	}
 
 	persistPath, _ := filepath.Abs("./data")
-	//persistPath := "mongodb://localhost/mmock"
+	//persistPath := "mongodb://localhost/http-api-mock"
 
 	sIP := flag.String("server-ip", outIP, "Mock server IP")
 	sPort := flag.Int("server-port", 8083, "Mock Server Port")
