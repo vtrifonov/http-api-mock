@@ -14,7 +14,7 @@ func getVarsProcessor() VarsProcessor {
 	return VarsProcessor{FillerFactory: MockFillerFactory{}, FakeAdapter: fakedata.NewDummyDataFaker("AleixMG"), PersistEngines: persistBag}
 }
 
-func TestRequestVars_RouteParameterPath(t *testing.T) {
+func TestRequestVarsFiller_RouteParameterPath(t *testing.T) {
 	processor := getVarsProcessor()
 
 	req := &definition.Request{}
@@ -31,7 +31,24 @@ func TestRequestVars_RouteParameterPath(t *testing.T) {
 	}
 }
 
-func TestRequestVars_MultipleRouteParametersPath(t *testing.T) {
+func TestRequestVarsFiller_Test(t *testing.T) {
+	processor := getVarsProcessor()
+
+	req := &definition.Request{}
+	req.Path = "{ \"test\" : 1 }"
+
+	mock := &definition.Mock{}
+	mock.Request.Path = "{ \"test\" : :testValue }"
+	mock.Response.Body = "{{ request.path.testValue }}"
+
+	processor.Eval(req, mock)
+
+	if mock.Response.Body != "1" {
+		t.Error("The response body should have the value of 1", mock.Response.Body)
+	}
+}
+
+func TestRequestVarsFiller_MultipleRouteParametersPath(t *testing.T) {
 	processor := getVarsProcessor()
 
 	req := &definition.Request{}
@@ -48,7 +65,7 @@ func TestRequestVars_MultipleRouteParametersPath(t *testing.T) {
 	}
 }
 
-func TestRequestVars_GlobPath(t *testing.T) {
+func TestRequestVarsFiller_GlobPath(t *testing.T) {
 	processor := getVarsProcessor()
 
 	req := &definition.Request{}

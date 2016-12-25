@@ -14,12 +14,12 @@ import (
 
 var errMissingParameterValue = errors.New("The requested method needs input parameters which are not supplied!")
 
-//FakeVars parses the data looking for fake data tags or request data tags
-type FakeVars struct {
+//FakeVarsFiller parses the data looking for fake data tags or request data tags
+type FakeVarsFiller struct {
 	Fake fakedata.DataFaker
 }
 
-func (fv FakeVars) call(data reflect.Value, name string) (string, error) {
+func (fvf FakeVarsFiller) call(data reflect.Value, name string) (string, error) {
 	// get a reflect.Value for the method
 	methodVal := data.MethodByName(name)
 	// turn that into an interface{}
@@ -40,7 +40,7 @@ func (fv FakeVars) call(data reflect.Value, name string) (string, error) {
 	return res, nil
 }
 
-func (fv FakeVars) callWithIntParameter(data reflect.Value, name string, parameter int) string {
+func (fvf FakeVarsFiller) callWithIntParameter(data reflect.Value, name string, parameter int) string {
 	// get a reflect.Value for the method
 	methodVal := data.MethodByName(name)
 	// turn that into an interface{}
@@ -52,14 +52,14 @@ func (fv FakeVars) callWithIntParameter(data reflect.Value, name string, paramet
 	return res
 }
 
-func (fv FakeVars) callMethod(name string) (string, bool) {
-	method, parameter, hasParameter := fv.getMethodAndParameter(name)
+func (fvf FakeVarsFiller) callMethod(name string) (string, bool) {
+	method, parameter, hasParameter := fvf.getMethodAndParameter(name)
 	if hasParameter {
 		name = method
 	}
 
 	found := false
-	data := reflect.ValueOf(fv.Fake)
+	data := reflect.ValueOf(fvf.Fake)
 	typ := data.Type()
 	if nMethod := data.Type().NumMethod(); nMethod > 0 {
 		for i := 0; i < nMethod; i++ {
@@ -69,10 +69,10 @@ func (fv FakeVars) callMethod(name string) (string, bool) {
 				// does receiver type match? (pointerness might be off)
 				if typ == method.Type.In(0) {
 					if hasParameter {
-						return fv.callWithIntParameter(data, method.Name, parameter), found
+						return fvf.callWithIntParameter(data, method.Name, parameter), found
 					}
 
-					result, err := fv.call(data, method.Name)
+					result, err := fvf.call(data, method.Name)
 					if err != nil {
 						logging.Printf(err.Error())
 					}
@@ -84,7 +84,7 @@ func (fv FakeVars) callMethod(name string) (string, bool) {
 	return "", found
 }
 
-func (fv FakeVars) getMethodAndParameter(input string) (method string, parameter int, success bool) {
+func (fvf FakeVarsFiller) getMethodAndParameter(input string) (method string, parameter int, success bool) {
 	r := regexp.MustCompile(`(?P<method>\w+)\((?P<parameter>.*?)\)`)
 
 	match := r.FindStringSubmatch(input)
@@ -113,7 +113,7 @@ func (fv FakeVars) getMethodAndParameter(input string) (method string, parameter
 	return
 }
 
-func (fv FakeVars) Fill(m *definition.Mock, input string, multipleMatch bool) string {
+func (fvf FakeVarsFiller) Fill(m *definition.Mock, input string, multipleMatch bool) string {
 	r := regexp.MustCompile(`\{\{\s*fake\.([^{]+?)\s*\}\}`)
 
 	return r.ReplaceAllStringFunc(input, func(raw string) string {
@@ -121,7 +121,7 @@ func (fv FakeVars) Fill(m *definition.Mock, input string, multipleMatch bool) st
 		s := ""
 		tag := strings.Trim(raw[2:len(raw)-2], " ")
 		if i := strings.Index(tag, "fake."); i == 0 {
-			s, found = fv.callMethod(tag[5:])
+			s, found = fvf.callMethod(tag[5:])
 		}
 
 		if !found {

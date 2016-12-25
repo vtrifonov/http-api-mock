@@ -17,17 +17,17 @@ type FillerFactory interface {
 type MockFillerFactory struct{}
 
 func (mff MockFillerFactory) CreateRequestFiller(req *definition.Request, mock *definition.Mock) Filler {
-	return RequestVars{Request: req, Mock: mock, RegexHelper: utils.RegexHelper{}}
+	return RequestVarsFiller{Request: req, Mock: mock, RegexHelper: utils.RegexHelper{}}
 }
 
 func (mff MockFillerFactory) CreateFakeFiller(fake fakedata.DataFaker) Filler {
-	return FakeVars{Fake: fake}
+	return FakeVarsFiller{Fake: fake}
 }
 
 func (mff MockFillerFactory) CreateStorageFiller(engines *persist.PersistEngineBag) Filler {
-	return StorageVars{Engines: engines, RegexHelper: utils.RegexHelper{}}
+	return StorageVarsFiller{Engines: engines, RegexHelper: utils.RegexHelper{}}
 }
 
 func (mff MockFillerFactory) CreatePersistFiller(engines *persist.PersistEngineBag) Filler {
-	return PersistVars{Engines: engines, RegexHelper: utils.RegexHelper{}}
+	return PersistVarsFiller{Engines: engines, RegexHelper: utils.RegexHelper{}}
 }

@@ -9,32 +9,32 @@ import (
 	"github.com/vtrifonov/http-api-mock/utils"
 )
 
-type RequestVars struct {
+type RequestVarsFiller struct {
 	Request     *definition.Request
 	Mock        *definition.Mock
 	RegexHelper utils.RegexHelper
 }
 
-func (rv RequestVars) Fill(m *definition.Mock, input string, multipleMatch bool) string {
+func (rvf RequestVarsFiller) Fill(m *definition.Mock, input string, multipleMatch bool) string {
 	r := regexp.MustCompile(`\{\{\s*request\.(.+?)\s*\}\}`)
 
 	if !multipleMatch {
 		return r.ReplaceAllStringFunc(input, func(raw string) string {
 			// replace the strings
-			if raw, found := rv.replaceString(raw); found {
+			if raw, found := rvf.replaceString(raw); found {
 				return raw
 			}
 			// replace regexes
-			return rv.replaceRegex(raw)
+			return rvf.replaceRegex(raw)
 		})
 	} else {
 		// first replace all strings
 		input = r.ReplaceAllStringFunc(input, func(raw string) string {
-			item, _ := rv.replaceString(raw)
+			item, _ := rvf.replaceString(raw)
 			return item
 		})
 		// get multiple entities using regex
-		if results, found := rv.RegexHelper.GetCollectionItems(input, rv.getVarsRegexParts); found {
+		if results, found := rvf.RegexHelper.GetCollectionItems(input, rvf.getVarsRegexParts); found {
 			if len(results) == 1 {
 				return "," + results[0] // add a comma in the beginning so that we will now that the item is a single entity
 			}
@@ -45,19 +45,19 @@ func (rv RequestVars) Fill(m *definition.Mock, input string, multipleMatch bool)
 	}
 }
 
-func (rv RequestVars) replaceString(raw string) (string, bool) {
+func (rvf RequestVarsFiller) replaceString(raw string) (string, bool) {
 	found := false
 	s := ""
 	tag := strings.Trim(raw[2:len(raw)-2], " ")
 	if tag == "request.body" {
-		s = rv.Request.Body
+		s = rvf.Request.Body
 		found = true
 	} else if i := strings.Index(tag, "request.query."); i == 0 {
-		s, found = rv.getQueryStringParam(rv.Request, tag[len("request.query."):])
+		s, found = rvf.getQueryStringParam(rvf.Request, tag[len("request.query."):])
 	} else if i := strings.Index(tag, "request.path."); i == 0 {
-		s, found = rv.getPathParm(tag[len("request.path."):])
+		s, found = rvf.getPathParm(tag[len("request.path."):])
 	} else if i := strings.Index(tag, "request.cookie."); i == 0 {
-		s, found = rv.getCookieParam(rv.Request, tag[len("request.cookie."):])
+		s, found = rvf.getCookieParam(rvf.Request, tag[len("request.cookie."):])
 	}
 	if !found {
 		return raw, false
@@ -65,29 +65,29 @@ func (rv RequestVars) replaceString(raw string) (string, bool) {
 	return s, true
 }
 
-func (rv RequestVars) getVarsRegexParts(input string) (string, string, bool) {
+func (rvf RequestVarsFiller) getVarsRegexParts(input string) (string, string, bool) {
 	if i := strings.Index(input, "request.url."); i == 0 {
-		return rv.Request.Path, input[12:], true
+		return rvf.Request.Path, input[12:], true
 	} else if i := strings.Index(input, "request.body."); i == 0 {
-		return rv.Request.Body, input[13:], true
+		return rvf.Request.Body, input[13:], true
 	}
 	return "", "", false
 }
 
-func (rv RequestVars) replaceRegex(raw string) string {
+func (rvf RequestVarsFiller) replaceRegex(raw string) string {
 	tag := strings.Trim(raw[2:len(raw)-2], " ")
-	if regexInput, regexPattern, found := rv.getVarsRegexParts(tag); found {
-		if result, found := rv.RegexHelper.GetStringPart(regexInput, regexPattern, "value"); found {
+	if regexInput, regexPattern, found := rvf.getVarsRegexParts(tag); found {
+		if result, found := rvf.RegexHelper.GetStringPart(regexInput, regexPattern, "value"); found {
 			return result
 		}
 	}
 	return raw
 }
 
-func (rv RequestVars) getPathParm(name string) (string, bool) {
+func (rvf RequestVarsFiller) getPathParm(name string) (string, bool) {
 
-	routes := urlmatcher.New(rv.Mock.Request.Path)
-	mparm := routes.Match(rv.Request.Path)
+	routes := urlmatcher.New(rvf.Mock.Request.Path)
+	mparm := routes.Match(rvf.Request.Path)
 
 	value, f := mparm.Params[name]
 	if !f {
@@ -97,12 +97,12 @@ func (rv RequestVars) getPathParm(name string) (string, bool) {
 	return value, true
 }
 
-func (rv RequestVars) getQueryStringParam(req *definition.Request, name string) (string, bool) {
+func (rvf RequestVarsFiller) getQueryStringParam(req *definition.Request, name string) (string, bool) {
 
-	if len(rv.Request.QueryStringParameters) == 0 {
+	if len(rvf.Request.QueryStringParameters) == 0 {
 		return "", false
 	}
-	value, f := rv.Request.QueryStringParameters[name]
+	value, f := rvf.Request.QueryStringParameters[name]
 	if !f {
 		return "", false
 	}
@@ -110,12 +110,12 @@ func (rv RequestVars) getQueryStringParam(req *definition.Request, name string) 
 	return value[0], true
 }
 
-func (rv RequestVars) getCookieParam(req *definition.Request, name string) (string, bool) {
+func (rvf RequestVarsFiller) getCookieParam(req *definition.Request, name string) (string, bool) {
 
-	if len(rv.Request.Cookies) == 0 {
+	if len(rvf.Request.Cookies) == 0 {
 		return "", false
 	}
-	value, f := rv.Request.Cookies[name]
+	value, f := rvf.Request.Cookies[name]
 	if !f {
 		return "", false
 	}

@@ -17,7 +17,7 @@ func getStorageProcessor(persistPath string) VarsProcessor {
 	return VarsProcessor{FillerFactory: MockFillerFactory{}, FakeAdapter: fakedata.NewDummyDataFaker("AleixMG"), PersistEngines: persistBag}
 }
 
-func TestStorageVars_Sequence_NoParameterPassed(t *testing.T) {
+func TestStorageVarsFiller_Sequence_NoParameterPassed(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -36,7 +36,7 @@ func TestStorageVars_Sequence_NoParameterPassed(t *testing.T) {
 	}
 }
 
-func TestStorageVars_Sequence_SingleParameterPassed(t *testing.T) {
+func Test_SequenceFiller_SingleParameterPassed(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -59,7 +59,7 @@ func TestStorageVars_Sequence_SingleParameterPassed(t *testing.T) {
 	}
 }
 
-func TestStorageVars_Sequence_ParameterAndIncreasePassed1(t *testing.T) {
+func TestStorageVarsFiller_Sequence_ParameterAndIncreasePassed1(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -82,7 +82,7 @@ func TestStorageVars_Sequence_ParameterAndIncreasePassed1(t *testing.T) {
 	}
 }
 
-func TestStorageVars_Sequence_ParameterAndIncreasePassed2(t *testing.T) {
+func TestStorageVarsFiller_Sequence_ParameterAndIncreasePassed2(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -105,7 +105,7 @@ func TestStorageVars_Sequence_ParameterAndIncreasePassed2(t *testing.T) {
 	}
 }
 
-func TestStorageVars_GetValue_NoParameterPassed(t *testing.T) {
+func TestStorageVarsFiller_GetValue_NoParameterPassed(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -125,7 +125,7 @@ func TestStorageVars_GetValue_NoParameterPassed(t *testing.T) {
 	}
 }
 
-func TestStorageVars_GetValue_NonExistingKey(t *testing.T) {
+func TestStorageVarsFiller_GetValue_NonExistingKey(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -145,7 +145,7 @@ func TestStorageVars_GetValue_NonExistingKey(t *testing.T) {
 	}
 }
 
-func TestStorageVars_GetValue_WithExistingKey(t *testing.T) {
+func TestStorageVarsFiller_GetValue_WithExistingKey(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -168,7 +168,7 @@ func TestStorageVars_GetValue_WithExistingKey(t *testing.T) {
 	}
 }
 
-func TestStorageVars_SetValue_NoParametersPassed(t *testing.T) {
+func TestStorageVarsFiller_SetValue_NoParametersPassed(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -188,7 +188,7 @@ func TestStorageVars_SetValue_NoParametersPassed(t *testing.T) {
 	}
 }
 
-func TestStorageVars_SetValue(t *testing.T) {
+func TestStorageVarsFiller_SetValue(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -216,7 +216,7 @@ func TestStorageVars_SetValue(t *testing.T) {
 	}
 }
 
-func TestStorageVars_SetValue_FromRequestUrl(t *testing.T) {
+func TestStorageVarsFiller_SetValue_FromRequestUrl(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
@@ -237,7 +237,7 @@ func TestStorageVars_SetValue_FromRequestUrl(t *testing.T) {
 	}
 }
 
-func TestStorageVars_SetValue_FromStorage(t *testing.T) {
+func TestStorageVarsFiller_SetValue_FromStorage(t *testing.T) {
 	persistPath, _ := filepath.Abs("./test_persist")
 	defer os.RemoveAll(persistPath)
 
