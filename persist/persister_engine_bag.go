@@ -3,7 +3,7 @@ package persist
 import (
 	"strings"
 
-	"github.com/jmartin82/mmock/logging"
+	"github.com/vtrifonov/http-api-mock/logging"
 )
 
 type PersistEngineBag struct {

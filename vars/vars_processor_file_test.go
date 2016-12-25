@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/persist"
-	"github.com/jmartin82/mmock/utils"
-	"github.com/jmartin82/mmock/vars/fakedata"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/persist"
+	"github.com/vtrifonov/http-api-mock/utils"
+	"github.com/vtrifonov/http-api-mock/vars/fakedata"
 )
 
 func getFileProcessor(persistPath string) VarsProcessor {

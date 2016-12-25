@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/utils"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/utils"
 	"github.com/ryanuber/go-glob"
 )
 

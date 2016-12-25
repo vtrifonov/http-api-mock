@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/ghodss/yaml"
-	"github.com/jmartin82/mmock/logging"
+	"github.com/vtrifonov/http-api-mock/logging"
 )
 
 //YAMLReader struct created to read yaml config files

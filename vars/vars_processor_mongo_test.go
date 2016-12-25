@@ -4,15 +4,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/persist"
-	"github.com/jmartin82/mmock/utils"
-	"github.com/jmartin82/mmock/vars/fakedata"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/persist"
+	"github.com/vtrifonov/http-api-mock/utils"
+	"github.com/vtrifonov/http-api-mock/vars/fakedata"
 	"gopkg.in/mgo.v2"
 )
 
-const mongoTestURL = "mongodb://localhost/mmock_test"
+const mongoTestURL = "mongodb://localhost/http-api-mock_test"
 
 type ConnectionState string
 

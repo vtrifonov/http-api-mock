@@ -9,7 +9,7 @@ import (
 	"sort"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/jmartin82/mmock/logging"
+	"github.com/vtrifonov/http-api-mock/logging"
 )
 
 //ErrNotFoundPath error from missing or configuration path

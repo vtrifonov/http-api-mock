@@ -5,9 +5,9 @@ import (
 	"encoding/gob"
 	"sync"
 
-	"github.com/jmartin82/mmock/definition"
-	"github.com/jmartin82/mmock/logging"
-	"github.com/jmartin82/mmock/match"
+	"github.com/vtrifonov/http-api-mock/definition"
+	"github.com/vtrifonov/http-api-mock/logging"
+	"github.com/vtrifonov/http-api-mock/match"
 )
 
 //NewRouter returns a pointer to new RequestRouter

@@ -1,8 +1,8 @@
 package notify
 
 import (
-	"github.com/jmartin82/mmock/amqp"
-	"github.com/jmartin82/mmock/definition"
+	"github.com/vtrifonov/http-api-mock/amqp"
+	"github.com/vtrifonov/http-api-mock/definition"
 )
 
 //MockNotifier notifies the needed parties

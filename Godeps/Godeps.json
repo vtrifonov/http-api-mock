@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/jmartin82/mmock",
+	"ImportPath": "github.com/vtrifonov/http-api-mock",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
 	"Deps": [

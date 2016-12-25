@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/Jeffail/gabs"
-	"github.com/jmartin82/mmock/definition"
+	"github.com/vtrifonov/http-api-mock/definition"
 )
 
 //IsJSON checks if a string is valid JSON or not
