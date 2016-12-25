@@ -29,7 +29,7 @@ var ErrNotFoundDefaultPath = errors.New("We can't determinate the current path")
 var ErrNotFoundAnyMock = errors.New("No valid mock definition found")
 
 func banner() {
-	fmt.Println("MMock v 1.0.1")
+	fmt.Println("MMock v 1.0.0")
 	fmt.Println("")
 
 	fmt.Print(
