@@ -35,8 +35,6 @@ Built with Go - Mmock runs without installation on multiple platforms.
 
 ### Example
 
-![Video of Mmock](/docs/example.gif "Mmock example")
-
 Mock definition file example:
 
 ```
