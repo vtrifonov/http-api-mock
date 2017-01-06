@@ -11,32 +11,32 @@ import (
 	"github.com/vtrifonov/http-api-mock/utils"
 )
 
-type PersistVars struct {
+type PersistVarsFiller struct {
 	Engines     *persist.PersistEngineBag
 	RegexHelper utils.RegexHelper
 }
 
-func (pv PersistVars) Fill(m *definition.Mock, input string, multipleMatch bool) string {
+func (pvf PersistVarsFiller) Fill(m *definition.Mock, input string, multipleMatch bool) string {
 	r := regexp.MustCompile(`\{\{\s*persist\.(.+?)\s*\}\}`)
 
 	if !multipleMatch {
 		return r.ReplaceAllStringFunc(input, func(raw string) string {
 			// replace the strings
-			if raw, found := pv.replaceString(m, raw); found {
+			if raw, found := pvf.replaceString(m, raw); found {
 				return raw
 			}
 			// replace regexes
-			return pv.replaceRegex(m, raw)
+			return pvf.replaceRegex(m, raw)
 		})
 	} else {
 		// first replace all strings
 		input = r.ReplaceAllStringFunc(input, func(raw string) string {
-			item, _ := pv.replaceString(m, raw)
+			item, _ := pvf.replaceString(m, raw)
 			return item
 		})
 		// get multiple entities using regex
-		results, found := pv.RegexHelper.GetCollectionItems(input, func(raw string) (string, string, bool) {
-			return pv.getPersistRegexParts(m, raw)
+		results, found := pvf.RegexHelper.GetCollectionItems(input, func(raw string) (string, string, bool) {
+			return pvf.getPersistRegexParts(m, raw)
 		})
 		if found {
 			if len(results) == 1 {
@@ -49,7 +49,7 @@ func (pv PersistVars) Fill(m *definition.Mock, input string, multipleMatch bool)
 	}
 }
 
-func (pv PersistVars) replaceString(m *definition.Mock, raw string) (string, bool) {
+func (pvf PersistVarsFiller) replaceString(m *definition.Mock, raw string) (string, bool) {
 	found := false
 	s := ""
 	tag := strings.Trim(raw[2:len(raw)-2], " ")
@@ -60,7 +60,7 @@ func (pv PersistVars) replaceString(m *definition.Mock, raw string) (string, boo
 		s = m.Persist.Collection
 		found = true
 	} else if i := strings.Index(tag, "persist.entity.content"); i == 0 {
-		engine := pv.Engines.Get(m.Persist.Engine)
+		engine := pvf.Engines.Get(m.Persist.Engine)
 		content, err := engine.Read(m.Persist.Entity)
 		//if error, we change Response status and body
 		if err != nil {
@@ -71,7 +71,7 @@ func (pv PersistVars) replaceString(m *definition.Mock, raw string) (string, boo
 		s = content
 		found = true
 	} else if i := strings.Index(tag, "persist.collection.content"); i == 0 {
-		engine := pv.Engines.Get(m.Persist.Engine)
+		engine := pvf.Engines.Get(m.Persist.Engine)
 		content, err := engine.ReadCollection(m.Persist.Collection)
 		//if error, we change Response status and body
 		if err != nil {
@@ -89,24 +89,24 @@ func (pv PersistVars) replaceString(m *definition.Mock, raw string) (string, boo
 	return s, true
 }
 
-func (pv PersistVars) getPersistRegexParts(m *definition.Mock, input string) (string, string, bool) {
+func (pvf PersistVarsFiller) getPersistRegexParts(m *definition.Mock, input string) (string, string, bool) {
 	if i := strings.Index(input, "persist.entity.name"); i == 0 && len(input) > len("persist.entity.name") {
 		return m.Persist.Entity, input[20:], true
 	}
 	return "", "", false
 }
 
-func (pv PersistVars) replaceRegex(m *definition.Mock, raw string) string {
+func (pvf PersistVarsFiller) replaceRegex(m *definition.Mock, raw string) string {
 	tag := strings.Trim(raw[2:len(raw)-2], " ")
-	if regexInput, regexPattern, found := pv.getPersistRegexParts(m, tag); found {
-		if result, found := pv.RegexHelper.GetStringPart(regexInput, regexPattern, "value"); found {
+	if regexInput, regexPattern, found := pvf.getPersistRegexParts(m, tag); found {
+		if result, found := pvf.RegexHelper.GetStringPart(regexInput, regexPattern, "value"); found {
 			return result
 		}
 	}
 	return raw
 }
 
-func (pv PersistVars) callSequence(m *definition.Mock, parameters string) (string, bool) {
+func (pvf PersistVarsFiller) callSequence(m *definition.Mock, parameters string) (string, bool) {
 	regexPattern := `\(\s*(?:'|")?(?P<name>.+?)(?:'|")?\s*,\s*(?P<increase>\d+?)\s*\)|\(\s*(?:'|")?(?P<nameOnly>.+?)(?:'|")?\s*\)`
 
 	helper := utils.RegexHelper{}
@@ -136,7 +136,7 @@ func (pv PersistVars) callSequence(m *definition.Mock, parameters string) (strin
 		return "", false
 	}
 
-	engine := pv.Engines.Get(m.Persist.Engine)
+	engine := pvf.Engines.Get(m.Persist.Engine)
 
 	if sequenceValue, err := engine.GetSequence(name, increaseInt); err == nil {
 		return strconv.Itoa(sequenceValue), true
@@ -145,7 +145,7 @@ func (pv PersistVars) callSequence(m *definition.Mock, parameters string) (strin
 	}
 }
 
-func (pv PersistVars) callSetValue(m *definition.Mock, parameters string) (string, bool) {
+func (pvf PersistVarsFiller) callSetValue(m *definition.Mock, parameters string) (string, bool) {
 	regexPattern := `\(\s*(?:'|")?(?P<key>.+?)(?:'|")?\s*,\s*(?:'|")?(?P<value>.+?)(?:'|")?\s*\)`
 
 	helper := utils.RegexHelper{}
@@ -160,7 +160,7 @@ func (pv PersistVars) callSetValue(m *definition.Mock, parameters string) (strin
 		return "", false
 	}
 
-	engine := pv.Engines.Get(m.Persist.Engine)
+	engine := pvf.Engines.Get(m.Persist.Engine)
 
 	if err := engine.SetValue(key, value); err == nil {
 		return value, true
@@ -169,7 +169,7 @@ func (pv PersistVars) callSetValue(m *definition.Mock, parameters string) (strin
 	}
 }
 
-func (pv PersistVars) callGetValue(m *definition.Mock, parameters string) (string, bool) {
+func (pvf PersistVarsFiller) callGetValue(m *definition.Mock, parameters string) (string, bool) {
 	regexPattern := `\(\s*(?:'|")?(?P<key>.+?)(?:'|")?\s*\)`
 
 	helper := utils.RegexHelper{}
@@ -179,7 +179,7 @@ func (pv PersistVars) callGetValue(m *definition.Mock, parameters string) (strin
 		return "", false
 	}
 
-	engine := pv.Engines.Get(m.Persist.Engine)
+	engine := pvf.Engines.Get(m.Persist.Engine)
 
 	if value, err := engine.GetValue(key); err == nil {
 		return value, true
