@@ -141,7 +141,7 @@ Mock definition:
 		
 	},
 	"persist" : {
-		"entity" : "/users/user-{{ reques.path.variable }}.json",
+		"entity" : "/users/user-{{ request.path.variable }}.json",
 		"collection" : "users",
         "actions"{
 			"delete":"true",
