@@ -253,7 +253,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 	* *userId*: Creating user id - ex: "guest".
 	* *appId*: Creating application id.  
 
-* *http*: An array of [requests](#request) to be made from the mock. This can be useful if you want to create more than one entity when calling an endpoint - that endpoint may call additional endpoints to init other entities related to this one. An example usage can be found in [post-user-orders-call-users.json](config/post-user-orders-call-users.json)
+* *http*: An array of [requests](#request) to be made from the mock. This can be useful if you want to create more than one entity when calling an endpoint - that endpoint may call additional endpoints to init other entities related to this one. An example usage can be found in [post-user-orders-call-users.json](config/persistence/post-user-orders-call-users.json)
 
 #### Control (Optional)
 
@@ -282,10 +282,10 @@ Request data:
  - persist.entity.name."regex to match value"
  - persist.collection.content
  - storage.Sequence(name, increaseWith) - generates next sequence with a given name, useful when auto generating id, if no increaseWith is passed or increaseWith = 0 the sequence won't be increased but the latest value will be returned
- - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the sample in [users-storage-post.json](config/users-storage-post.json), [users-storage-get-by-id.json](config/users-storage-get-by-id.json) and [users-storage-get-by-username.json](config/users-storage-get-by-username.json)
+ - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the samples in [storage](config/persistence/storage/) folder
  - storage.GetValue(key) - returns the value corresponding to the given key
 
-> Regex: The regex should contain a group named **value** which will be matched and its value will be returned. E.g. if we want to match the id from this url **`/your/path/4`** the regex should look like **`/your/path/(?P<value>\\d+)`**. Note that in *golang* the named regex group match need to contain a **P** symbol after the question mark. The regex should be prefixed either with **request.url.**, **request.body.** or **response.body.** considering your input. When setting the Persist.Collection field the regex can match multiple records from it's input, which is useful for cases like [users-delete-passingids.json](config/users-delete-passingids.json) 
+> Regex: The regex should contain a group named **value** which will be matched and its value will be returned. E.g. if we want to match the id from this url **`/your/path/4`** the regex should look like **`/your/path/(?P<value>\\d+)`**. Note that in *golang* the named regex group match need to contain a **P** symbol after the question mark. The regex should be prefixed either with **request.url.**, **request.body.** or **response.body.** considering your input. When setting the Persist.Collection field the regex can match multiple records from it's input, which is useful for cases like [users-delete-passingids.json](config/persistence/users-delete-passingids.json) 
 
 
 [Fake](https://godoc.org/github.com/icrowley/fake) data:
@@ -357,9 +357,9 @@ For example if you are using your local mongo the connection string might be **`
 `collectionName/itemId`
 
 You can check the sample configurations for persistence in the following files:
- * [users-get.json](config/users-get.json)
- * [users-post.json](config/users-post.json)
- * [users-delete.json](config/users-delete.json)
+ * [users-get.json](config/persistence/crud/users-get.json)
+ * [users-post.json](config/persistence/crud/users-post.json)
+ * [users-delete.json](config/persistence/crud/users-delete.json)
 
 That configurations are going to work either with [File system](#file-system) or [MongoDB](#mongodb) modes.
 

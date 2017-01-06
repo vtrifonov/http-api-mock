@@ -1,14 +1,14 @@
 {  
-    "description": "Sends a message to an AMQP server after the content is persisted",
+    "description": "Creates an order and makes a request to create user with the given userId",
     "request":{  
         "method":"POST",
-        "path":"/user-orders/*.json"
+        "path":"/user-orders/:userId"
     },
     "persist": {
-        "entity": "/orders/user-orders-{{request.url./user-orders/(?P<value>\\d+)}}.json",
+        "entity": "/orders/user-orders-{{ request.path.userId }}.json",
         "actions" : {
             "write" : "{{request.body}}",
-            "append" : "{ \"user_id\": {{request.url./user-orders/(?P<value>\\d+)}}, \"order\": \"{{ fake.Digits }}\" }"
+            "append" : "{ \"user_id\": {{ request.path.userId }}, \"order\": \"{{ fake.Digits }}\" }"
         }
     },
     "response":{  
@@ -23,7 +23,7 @@
     "notify":{  
         "http":[{  
             "method":"POST",
-            "path":"/users/{{request.url./user-orders/(?P<value>\\d+)}}.json",
+            "path":"/users/{{ request.path.userId }}",
             "body":"{ \"FirstName\": \"{{fake.FirstName}}\", \"LastName\": \"{{fake.LastName}}\" }"
         }]
     }
