@@ -56,6 +56,9 @@ func (pvf PersistVarsFiller) replaceString(m *definition.Mock, raw string) (stri
 	if tag == "persist.entity.name" {
 		s = m.Persist.Entity
 		found = true
+	} else if tag == "persist.entity.id" {
+		s = m.Persist.EntityID
+		found = true
 	} else if i := strings.Index(tag, "persist.collection.name"); i == 0 {
 		s = m.Persist.Collection
 		found = true

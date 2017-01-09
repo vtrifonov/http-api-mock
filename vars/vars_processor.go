@@ -77,6 +77,7 @@ func (fp VarsProcessor) walkAndFillNotify(f Filler, m *definition.Mock) {
 func (fp VarsProcessor) walkAndFillPersisted(f Filler, m *definition.Mock) {
 	per := &m.Persist
 
+	per.EntityID = f.Fill(m, per.EntityID, false)
 	per.Entity = f.Fill(m, per.Entity, false)
 	per.Collection = f.Fill(m, per.Collection, true)
 	for action, value := range per.Actions {

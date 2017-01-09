@@ -5,9 +5,10 @@
         "path": "/storage-users"
     },
     "persist": {
-        "entity": "/storage-users/user-{{ storage.SetValue({{ request.body.username\\=(?P<value>.+?)(?:&|$) }}, {{ storage.Sequence(storage-users, 1) }}) }}.json",
+        "entity-id": "{{ storage.SetValue({{ request.body.username\\=(?P<value>.+?)(?:&|$) }}, {{ storage.Sequence(storage-users, 1) }}) }}",
+        "entity": "/storage-users/user-{{ persist.entity.id }}.json",
         "actions" : {
-            "write" : "{\"id\": {{ persist.entity.name./storage-users/user\\-(?P<value>\\d+)\\.json }}, \"username\": \"{{ request.body.username\\=(?P<value>.+?)(?:&|$) }}\", \"fullname\":\"{{ request.body.fullname\\=(?P<value>.+?)(?:&|$) }}\"}"
+            "write" : "{\"id\":{{ persist.entity.id }}, \"username\": \"{{ request.body.username\\=(?P<value>.+?)(?:&|$) }}\", \"fullname\":\"{{ request.body.fullname\\=(?P<value>.+?)(?:&|$) }}\"}"
         }
     },
     "response": {
