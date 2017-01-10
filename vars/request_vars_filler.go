@@ -52,10 +52,12 @@ func (rvf RequestVarsFiller) replaceString(raw string) (string, bool) {
 	if tag == "request.body" {
 		s = rvf.Request.Body
 		found = true
+	} else if i := strings.Index(tag, "request.body."); i == 0 {
+		s, found = rvf.getBodyParam(rvf.Request, tag[len("request.body."):])
 	} else if i := strings.Index(tag, "request.query."); i == 0 {
 		s, found = rvf.getQueryStringParam(rvf.Request, tag[len("request.query."):])
 	} else if i := strings.Index(tag, "request.path."); i == 0 {
-		s, found = rvf.getPathParm(tag[len("request.path."):])
+		s, found = rvf.getPathParam(tag[len("request.path."):])
 	} else if i := strings.Index(tag, "request.cookie."); i == 0 {
 		s, found = rvf.getCookieParam(rvf.Request, tag[len("request.cookie."):])
 	}
@@ -84,7 +86,7 @@ func (rvf RequestVarsFiller) replaceRegex(raw string) string {
 	return raw
 }
 
-func (rvf RequestVarsFiller) getPathParm(name string) (string, bool) {
+func (rvf RequestVarsFiller) getPathParam(name string) (string, bool) {
 
 	routes := urlmatcher.New(rvf.Mock.Request.Path)
 	mparm := routes.Match(rvf.Request.Path)
@@ -108,6 +110,12 @@ func (rvf RequestVarsFiller) getQueryStringParam(req *definition.Request, name s
 	}
 
 	return value[0], true
+}
+
+func (rvf RequestVarsFiller) getBodyParam(req *definition.Request, name string) (string, bool) {
+
+	value, err := utils.GetPropertyValue(req.Body, name)
+	return value, err == nil
 }
 
 func (rvf RequestVarsFiller) getCookieParam(req *definition.Request, name string) (string, bool) {

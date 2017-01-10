@@ -81,3 +81,24 @@ func TestRequestVarsFiller_GlobPath(t *testing.T) {
 		t.Error("The response body should have the value of 1", mock.Response.Body)
 	}
 }
+
+func TestRequestVarsFiller_BodyPart(t *testing.T) {
+	processor := getVarsProcessor()
+
+	req := &definition.Request{}
+
+	req.Path = "/users/1"
+	req.Body = "{ \"a\": { \"aa\": \"nameValue\", \"ab\": 2}, \"b\": 3 }"
+
+	mock := &definition.Mock{}
+	mock.Request.Path = "/users/*"
+	mock.Response.Body = "{ \"name\": {{ request.body.a.aa }}, \"value\" : {{ request.body.a.ab }} }"
+
+	expectedResult := "{ \"name\": \"nameValue\", \"value\" : 2 }"
+
+	processor.Eval(req, mock)
+
+	if mock.Response.Body != expectedResult {
+		t.Error("The result differs from the expected result", mock.Response.Body, expectedResult)
+	}
+}
