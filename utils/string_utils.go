@@ -2,12 +2,17 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
+	"net/url"
 
 	"strings"
 
 	"github.com/Jeffail/gabs"
 	"github.com/vtrifonov/http-api-mock/definition"
 )
+
+//ErrorPropertyMissingInJSON when there's no such property in the JSON document
+var ErrorPropertyMissingInJSON = errors.New("There is no such property in the JSON document")
 
 //IsJSON checks if a string is valid JSON or not
 func IsJSON(s string) bool {
@@ -117,4 +122,66 @@ func UnWrapNonJSONStringIfNeeded(input string) string {
 		return nonJSON.Content
 	}
 	return input
+}
+
+//JSONSerialize serializes an inteface to JSON string
+func JSONSerialize(input interface{}) (string, error) {
+	byteResult, err := json.Marshal(input)
+	if err != nil {
+		return "", err
+	}
+	return string(byteResult), nil
+}
+
+//JSONDeserialize deserializes a JSON string to interface map
+func JSONDeserialize(input string) (map[string]interface{}, error) {
+	var properties map[string]interface{}
+	if err := json.Unmarshal([]byte(input), &properties); err != nil {
+		return nil, err
+	}
+	return properties, nil
+}
+
+//GetJSONProperty returns the string value of a given property inside a JSON document
+func GetJSONProperty(input string, property string) (string, error) {
+	properties, err := JSONDeserialize(input)
+
+	if err != nil {
+		return "", err
+	}
+
+	result, exists := properties[property]
+
+	if !exists {
+		return "", ErrorPropertyMissingInJSON
+	}
+
+	return JSONSerialize(result)
+}
+
+//GetJSONCompositePropertyValue returns composite property value digging inside complex JSON documents
+func GetJSONCompositePropertyValue(input string, property string) (string, error) {
+	properties := strings.Split(property, ".")
+	value, err := GetJSONProperty(input, properties[0])
+	if err != nil {
+		return "", err
+	}
+	if len(properties) > 1 {
+		subProperty := strings.Join(properties[1:], ".")
+		return GetJSONCompositePropertyValue(value, subProperty)
+	}
+	return value, nil
+}
+
+//GetPropertyValue returns the json property value if input is json, otherwise tries to parse the value as query string and get property value
+func GetPropertyValue(input string, property string) (string, error) {
+	if IsJSON(input) {
+		return GetJSONCompositePropertyValue(input, property)
+	}
+
+	values, err := url.ParseQuery(input)
+	if err != nil {
+		return "", err
+	}
+	return values.Get(property), err
 }
