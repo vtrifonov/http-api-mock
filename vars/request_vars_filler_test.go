@@ -92,7 +92,7 @@ func TestRequestVarsFiller_BodyPart(t *testing.T) {
 
 	mock := &definition.Mock{}
 	mock.Request.Path = "/users/*"
-	mock.Response.Body = "{ \"name\": {{ request.body.a.aa }}, \"value\" : {{ request.body.a.ab }} }"
+	mock.Response.Body = "{ \"name\": \"{{ request.body.a.aa }}\", \"value\" : {{ request.body.a.ab }} }"
 
 	expectedResult := "{ \"name\": \"nameValue\", \"value\" : 2 }"
 

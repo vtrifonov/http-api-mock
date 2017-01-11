@@ -71,8 +71,13 @@ func (pvf PersistVarsFiller) replaceString(m *definition.Mock, raw string) (stri
 			m.Response.Body = ""
 			m.Response.StatusCode = 404
 		}
-		s = content
-		found = true
+		//check for persisted entity properties like persist.entity.content.name
+		if i := strings.Index(tag, "persist.entity.content."); i == 0 {
+			s, found = pvf.getContentParam(content, tag[len("persist.entity.content."):])
+		} else {
+			s = content
+			found = true
+		}
 	} else if i := strings.Index(tag, "persist.collection.content"); i == 0 {
 		engine := pvf.Engines.Get(m.Persist.Engine)
 		content, err := engine.ReadCollection(m.Persist.Collection)
@@ -90,6 +95,15 @@ func (pvf PersistVarsFiller) replaceString(m *definition.Mock, raw string) (stri
 		return raw, false
 	}
 	return s, true
+}
+
+func (pvf PersistVarsFiller) getContentParam(content string, name string) (string, bool) {
+	r := regexp.MustCompile(`^(\w+\.)*\w+$`)
+	if !r.MatchString(name) {
+		return "", false
+	}
+	value, err := utils.GetPropertyValue(content, name)
+	return value, err == nil
 }
 
 func (pvf PersistVarsFiller) getPersistRegexParts(m *definition.Mock, input string) (string, string, bool) {

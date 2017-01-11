@@ -170,7 +170,19 @@ func GetJSONCompositePropertyValue(input string, property string) (string, error
 		subProperty := strings.Join(properties[1:], ".")
 		return GetJSONCompositePropertyValue(value, subProperty)
 	}
+
+	value = trimSurroundings(value, "\"")
+	value = trimSurroundings(value, "'")
+
 	return value, nil
+}
+
+func trimSurroundings(input string, surrounding string) string {
+	if strings.HasPrefix(input, surrounding) && strings.HasSuffix(input, surrounding) {
+		input = strings.TrimPrefix(input, surrounding)
+		input = strings.TrimSuffix(input, surrounding)
+	}
+	return input
 }
 
 //GetPropertyValue returns the json property value if input is json, otherwise tries to parse the value as query string and get property value
