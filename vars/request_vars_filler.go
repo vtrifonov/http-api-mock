@@ -113,7 +113,10 @@ func (rvf RequestVarsFiller) getQueryStringParam(req *definition.Request, name s
 }
 
 func (rvf RequestVarsFiller) getBodyParam(req *definition.Request, name string) (string, bool) {
-
+	r := regexp.MustCompile(`^(\w+\.)*\w+$`)
+	if !r.MatchString(name) {
+		return "", false
+	}
 	value, err := utils.GetPropertyValue(req.Body, name)
 	return value, err == nil
 }
