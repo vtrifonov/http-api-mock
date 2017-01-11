@@ -141,7 +141,8 @@ Mock definition:
 		
 	},
 	"persist" : {
-		"entity" : "/users/user-{{ request.path.variable }}.json",
+		"entity-id": "{{ request.path.variable }}",
+		"entity" : "/users/user-{{ request.entity.id }}.json",
 		"collection" : "users",
         "actions"{
 			"delete":"true",
@@ -152,7 +153,7 @@ Mock definition:
 	"notify":{
 		"amqp": {
             "url": "amqp://guest:guest@localhost:5672/myVHost",
-            "body": "{{ response.body }}",
+            "body": "{{ persist.entity.content }}",
 			"delay": 2,
             "exchange": "myExchange",
             "type": "MockType",
@@ -225,6 +226,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 
 #### Persist (Optional)
 	
+* *entity-id*: Can be used for generating the entity ID which can be later reused in the definition. You can check the example usage in [users-post-generate-id.json](/config/persistence/crud/users-post-generate-id.json) and [users-storage-post.json](/config/persistence/storage/users-storage-post.json)
 * *entity*: The relative path from config-persist-path to the file where the response body to be loaded from or the collection name and id if you are using MongoDB. It allows vars.
 * *collection*: Used for returning or deleting more than one record. Represents the relative path from config-persist-path to the folder or the name of the mongo collection from where the records should be selected. Regex or glob can be used for filtering entities as well. Examples for the usage of collections can be found [here](/config).
 * *actions*: Actions to take over the entity (Append,Write,Delete)
@@ -273,13 +275,15 @@ Request data:
  - request.path."*key*"
  - request.url
  - request.body
- - response.body
  - request.url."regex to match value"
+ - request.body."body path" - can be used for accessing JSON property if body is in JSON format or queryString format property if body is url encoded. Example can be found here [users-body-parts.json](config/persistence/users-body-parts.json)
  - request.body."regex to match value"
- - response.body."regex to match value"
  - persist.entity.content
+ - persist.entity.id
  - persist.entity.name
  - persist.entity.name."regex to match value"
+ - persist.entity.content
+ - request.entity.content."path" - can be used for accessing JSON property if content is in JSON format or queryString format property if content is url encoded
  - persist.collection.content
  - storage.Sequence(name, increaseWith) - generates next sequence with a given name, useful when auto generating id, if no increaseWith is passed or increaseWith = 0 the sequence won't be increased but the latest value will be returned
  - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the samples in [storage](config/persistence/storage/) folder

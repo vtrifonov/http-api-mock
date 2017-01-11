@@ -5,10 +5,11 @@
         "path": "/users"
     },
     "persist": {
-        "entity": "/users/user-{{storage.Sequence('user', 1)}}.json",
+        "entity-id": "{{storage.Sequence('user', 1)}}",
+        "entity": "/users/user-{{ persist.entity.id }}.json",
         "actions" : {
             "write" : "{{ request.body }}",
-            "append" : "{ \"id\": {{persist.entity.name./users/user\\-(?P<value>\\d+)\\.json}}, \"uuid\" : \"{{ fake.UUID }}\" }"
+            "append" : "{ \"id\": {{ persist.entity.id }}, \"uuid\" : \"{{ fake.UUID }}\" }"
         }
     },
     "response": {

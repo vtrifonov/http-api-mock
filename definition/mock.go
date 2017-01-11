@@ -11,6 +11,7 @@ type Actions map[string]string
 type Requests []Request
 
 type Persist struct {
+	EntityID   string  `json:"entity-id"`
 	Entity     string  `json:"entity"`
 	Collection string  `json:"collection"`
 	Actions    Actions `json:"actions"`
