@@ -1,0 +1,23 @@
+{
+    "description": "Creating a persisted entity by getting part of the body. Should work both with bodies like '{ \"name\": \"Vasil\", \"city\": \"Sofia\"}' and 'name=Vasil&city=Sofia' ",
+    "request": {
+        "method": "POST",
+        "path": "/users-body-parts/:userId"
+    },
+    "persist": {
+        "entity": "/users-body-parts/user-{{ request.path.userId }}.json",
+        "actions" : {
+            "write" : "{ \"name\": \"{{ request.body.name }}\" }",
+            "append" : "{ \"id\": {{ request.path.userId }}}"
+        }
+    },
+    "response": {
+        "statusCode": 202,
+        "headers": {
+            "Content-Type": [
+                "text/plain"
+            ]
+        },
+        "body":"{{persist.entity.content.name}}"
+    }
+}

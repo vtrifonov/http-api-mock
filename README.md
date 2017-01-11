@@ -153,7 +153,7 @@ Mock definition:
 	"notify":{
 		"amqp": {
             "url": "amqp://guest:guest@localhost:5672/myVHost",
-            "body": "{{ response.body }}",
+            "body": "{{ persist.entity.content }}",
 			"delay": 2,
             "exchange": "myExchange",
             "type": "MockType",
@@ -275,14 +275,15 @@ Request data:
  - request.path."*key*"
  - request.url
  - request.body
- - response.body
  - request.url."regex to match value"
+ - request.body."body path" - can be used for accessing JSON property if body is in JSON format or queryString format property if body is url encoded. Example can be found here [users-body-parts.json](config/persistence/users-body-parts.json)
  - request.body."regex to match value"
- - response.body."regex to match value"
  - persist.entity.content
  - persist.entity.id
  - persist.entity.name
  - persist.entity.name."regex to match value"
+ - persist.entity.content
+ - request.entity.content."path" - can be used for accessing JSON property if content is in JSON format or queryString format property if content is url encoded
  - persist.collection.content
  - storage.Sequence(name, increaseWith) - generates next sequence with a given name, useful when auto generating id, if no increaseWith is passed or increaseWith = 0 the sequence won't be increased but the latest value will be returned
  - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the samples in [storage](config/persistence/storage/) folder
