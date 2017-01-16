@@ -1,7 +1,7 @@
 .PHONY: build doc fmt lint dev test vet godep install bench bindata
 
 PKG_NAME=$(shell basename `pwd`)
-NS = vtrifonov
+NS = trifonov
 VERSION ?= latest
 
 install:
