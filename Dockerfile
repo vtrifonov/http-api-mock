@@ -7,4 +7,4 @@ VOLUME /config
 
 EXPOSE 8082 8083
 
-ENTRIPOINT ["/go/bin/http-api-mock","-config-path","/config"]
+ENTRYPOINT ["/go/bin/http-api-mock","-config-path","/config"]
