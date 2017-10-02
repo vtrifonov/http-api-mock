@@ -14,6 +14,6 @@
                 "application/json"
             ]
         },
-        "body":"{{persist.collection.content}}"
+        "body":"{ \"items\": {{persist.collection.content}}, \"count\": {{persist.collection.count}} }"
     }
 }
