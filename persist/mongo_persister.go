@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ryanuber/go-glob"
 	"github.com/vtrifonov/http-api-mock/logging"
 	"github.com/vtrifonov/http-api-mock/utils"
-	"github.com/ryanuber/go-glob"
 )
 
 var (
@@ -61,6 +61,13 @@ func (mp MongoPersister) ReadCollection(name string) (string, error) {
 		return "[" + strings.Join(contents, ",") + "]", nil
 	}
 	return strings.Join(contents, "\n"), nil
+}
+
+func (mp MongoPersister) GetCollectionLength(name string) int {
+	logging.Printf("Getting collection length: %s\n", name)
+	itemsInCollection := mp.getCollectionItems(name)
+
+	return len(itemsInCollection)
 }
 
 func (mp MongoPersister) Write(name, content string) error {

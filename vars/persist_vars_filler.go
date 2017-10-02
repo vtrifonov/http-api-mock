@@ -89,6 +89,11 @@ func (pvf PersistVarsFiller) replaceString(m *definition.Mock, raw string) (stri
 		}
 		s = content
 		found = true
+	} else if i := strings.Index(tag, "persist.collection.count"); i == 0 {
+		engine := pvf.Engines.Get(m.Persist.Engine)
+		length := engine.GetCollectionLength(m.Persist.Collection)
+		s = strconv.Itoa(length)
+		found = true
 	}
 
 	if !found {
