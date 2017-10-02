@@ -285,6 +285,7 @@ Request data:
  - persist.entity.content
  - request.entity.content."path" - can be used for accessing JSON property if content is in JSON format or queryString format property if content is url encoded
  - persist.collection.content
+ - persist.collection.count
  - storage.Sequence(name, increaseWith) - generates next sequence with a given name, useful when auto generating id, if no increaseWith is passed or increaseWith = 0 the sequence won't be increased but the latest value will be returned
  - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the samples in [storage](config/persistence/storage/) folder
  - storage.GetValue(key) - returns the value corresponding to the given key
