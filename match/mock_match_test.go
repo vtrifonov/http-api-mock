@@ -115,7 +115,7 @@ func TestMatchCookies(t *testing.T) {
 func TestMatchHeaders(t *testing.T) {
 	hreq := &definition.Request{}
 	hval := make(definition.Values)
-	hval["test"] = []string{"test"}
+	hval["Test"] = []string{"test"}
 	hreq.Headers = hval
 
 	mreq := &definition.Request{}
