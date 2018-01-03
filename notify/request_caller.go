@@ -50,11 +50,11 @@ func (caller RequestCaller) Call(request definition.Request) bool {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		logging.Printf("Error executing request to %s. Error: %s", request.Path, err)
 		return false
 	}
+	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	logging.Printf("Request to %s returned status code %d and body: %s", request.Path, resp.StatusCode, body)

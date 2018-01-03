@@ -21,26 +21,49 @@ var (
 type MockMatch struct {
 }
 
-func (mm MockMatch) matchKeyAndValues(reqMap definition.Values, mockMap definition.Values) bool {
+func (mm MockMatch) matchKeyAndValues(reqMap definition.Values, mockMap definition.Values, casesensitive, any_one bool) bool {
 
 	if len(mockMap) > len(reqMap) {
 
 		return false
 	}
 
-	for key, mval := range mockMap {
-		if rval, exists := reqMap[key]; exists {
-
-			if len(mval) > len(rval) {
-				return false
+	if !casesensitive {
+		for key, val := range reqMap {
+			if lkey := strings.ToLower(key); lkey != key {
+				delete(reqMap, key)
+				reqMap[lkey] = val
 			}
+		}
+	}
 
-			for i, v := range mval {
-				if v != rval[i] {
+	for key, mval := range mockMap {
+		if !casesensitive {
+			key = strings.ToLower(key)
+		}
+		if rval, exists := reqMap[key]; exists {
+			if any_one && len(rval) == 1 {
+				match := false
+				for i := range mval {
+					if mval[i] == rval[0] {
+						match = true
+						break
+					}
+				}
+				if !match {
 					return false
 				}
-			}
+			} else {
+				if len(mval) > len(rval) {
+					return false
+				}
 
+				for i, v := range mval {
+					if v != rval[i] {
+						return false
+					}
+				}
+			}
 		} else {
 			return false
 		}
@@ -82,7 +105,7 @@ func (mm MockMatch) Match(req *definition.Request, mock *definition.Request) (bo
 		return false, ErrMethodNotMatch
 	}
 
-	if !mm.matchKeyAndValues(req.QueryStringParameters, mock.QueryStringParameters) {
+	if !mm.matchKeyAndValues(req.QueryStringParameters, mock.QueryStringParameters, true, true) {
 		return false, ErrQueryStringMatch
 	}
 
@@ -90,7 +113,7 @@ func (mm MockMatch) Match(req *definition.Request, mock *definition.Request) (bo
 		return false, ErrCookiesNotMatch
 	}
 
-	if !mm.matchKeyAndValues(req.Headers, mock.Headers) {
+	if !mm.matchKeyAndValues(req.Headers, mock.Headers, false, false) {
 		return false, ErrHeadersNotMatch
 	}
 
