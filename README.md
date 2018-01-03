@@ -376,9 +376,13 @@ Requires Go 1.4+ to build.
 
 If you make any changes, run ```go fmt ./...``` before submitting a pull request.
 
+### Contributors
+
+* [James A. Robinson](https://github.com/jimrobinson)
+
 ### Licence
 
 Original work Copyright (c) 2016 [Jordi Martin](http://jordi.io)  
-Modified work Copyright 2016 - 2017 [Vasil Trifonov](https://github.com/vtrifonov)
+Modified work Copyright 2016 - 2018 [Vasil Trifonov](https://github.com/vtrifonov)
 
 Released under MIT license, see [LICENSE](LICENSE.md) for details.
