@@ -1,4 +1,4 @@
-HTTP API Mock 
+HTTP API Mock
 =========
 [![Build Status](https://travis-ci.org/vtrifonov/http-api-mock.svg?branch=master)](https://travis-ci.org/vtrifonov/http-api-mock)
 
@@ -78,7 +78,7 @@ You can see more complex examples [here](/config).
 
 ### Getting started
 
-To run HTTP API Mock locally from the command line. 
+To run HTTP API Mock locally from the command line.
 
 ```
 go get github.com/vtrifonov/http-api-mock
@@ -91,12 +91,12 @@ To configure HTTP API Mock, use command line flags described in help.
 
 ```
     Usage of ./http-api-mock:
-      -cconsole-port int
+      -console-port int
           Console server Port (default 8082)
       -config-path string
           Mocks definition folder (default "execution_path/config")
       -config-persist-path
-          Path to the folder where requests can be persisted or connection string to mongo database starting with mongodb:// and having database at the end /DatabaseName (default "execution_path/data") 
+          Path to the folder where requests can be persisted or connection string to mongo database starting with mongodb:// and having database at the end /DatabaseName (default "execution_path/data")
       -console
           Console enabled  (true/false) (default true)
       -console-ip string
@@ -138,7 +138,7 @@ Mock definition:
 			"name": "value"
 		},
 		"body": "Response body",
-		
+
 	},
 	"persist" : {
 		"entity-id": "{{ request.path.variable }}",
@@ -167,7 +167,7 @@ Mock definition:
 			"messageId": "",
 			"timestamp": "2016-01-01T00:00:00Z",
 			"userId": "",
-			"appId": "" 
+			"appId": ""
         },
 		"http":[
 			{
@@ -206,7 +206,7 @@ Mock definition:
 
 #### Request
 
-This mock definition section represents the expected input data. I the request data match with mock request section, the server will response the mock response data.  
+This mock definition section represents the expected input data. I the request data match with mock request section, the server will response the mock response data.
 
 * *method*: Request http method. **Mandatory**
 * *path*: Resource identifier. It allows * pattern. **Mandatory**
@@ -225,7 +225,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 * *body*: Body string. It allows vars.
 
 #### Persist (Optional)
-	
+
 * *entity-id*: Can be used for generating the entity ID which can be later reused in the definition. You can check the example usage in [users-post-generate-id.json](/config/persistence/crud/users-post-generate-id.json) and [users-storage-post.json](/config/persistence/storage/users-storage-post.json)
 * *entity*: The relative path from config-persist-path to the file where the response body to be loaded from or the collection name and id if you are using MongoDB. It allows vars.
 * *collection*: Used for returning or deleting more than one record. Represents the relative path from config-persist-path to the folder or the name of the mongo collection from where the records should be selected. Regex or glob can be used for filtering entities as well. Examples for the usage of collections can be found [here](/config).
@@ -236,7 +236,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 * *amqp*: Configuration for sending message to AMQP server. If such configuration is present a message will be sent to the configured server.
 
 	##### AMQP (Optional)
-	
+
 	* *url*: Url to the amqp server e.g. amqp://guest:guest@localhost:5672/vhost **Mandatory**.
 	* *exchange*: The name of the exchange to post to **Mandatory**.
 	* *delay*: message send delay in seconds.
@@ -253,7 +253,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 	* *timestamp*: Message timestamp.
 	* *type*: Message type name.
 	* *userId*: Creating user id - ex: "guest".
-	* *appId*: Creating application id.  
+	* *appId*: Creating application id.
 
 * *http*: An array of [requests](#request) to be made from the mock. This can be useful if you want to create more than one entity when calling an endpoint - that endpoint may call additional endpoints to init other entities related to this one. An example usage can be found in [post-user-orders-call-users.json](config/persistence/post-user-orders-call-users.json)
 
@@ -266,7 +266,7 @@ To do a match with queryStringParameters, headers, cookies. All defined keys in 
 
 ### Variable tags
 
-You can use variable data (random data or request data) in response. The variables will be defined as tags like this {{nameVar}} 
+You can use variable data (random data or request data) in response. The variables will be defined as tags like this {{nameVar}}
 
 Request data:
 
@@ -290,7 +290,7 @@ Request data:
  - storage.SetValue(key, value) - stores a value corresponding to a given key and returns the value. This is useful if you have some entities requested by both id and name, so that you can store the mapping between than and later retrieve it. You can check the samples in [storage](config/persistence/storage/) folder
  - storage.GetValue(key) - returns the value corresponding to the given key
 
-> Regex: The regex should contain a group named **value** which will be matched and its value will be returned. E.g. if we want to match the id from this url **`/your/path/4`** the regex should look like **`/your/path/(?P<value>\\d+)`**. Note that in *golang* the named regex group match need to contain a **P** symbol after the question mark. The regex should be prefixed either with **request.url.**, **request.body.** or **response.body.** considering your input. When setting the Persist.Collection field the regex can match multiple records from it's input, which is useful for cases like [users-delete-passingids.json](config/persistence/users-delete-passingids.json) 
+> Regex: The regex should contain a group named **value** which will be matched and its value will be returned. E.g. if we want to match the id from this url **`/your/path/4`** the regex should look like **`/your/path/(?P<value>\\d+)`**. Note that in *golang* the named regex group match need to contain a **P** symbol after the question mark. The regex should be prefixed either with **request.url.**, **request.body.** or **response.body.** considering your input. When setting the Persist.Collection field the regex can match multiple records from it's input, which is useful for cases like [users-delete-passingids.json](config/persistence/users-delete-passingids.json)
 
 
 [Fake](https://godoc.org/github.com/icrowley/fake) data:
@@ -341,10 +341,10 @@ Request data:
  - fake.Words
  - fake.WordsN(n)
  - fake.Zip
-  
+
  - fake.Int(n) - random positive integer less than or equal to n
  - fake.Float(n) - random positive floating point number less than n
- - fake.UUID - generates a [unique id](https://github.com/twinj/uuid)  
+ - fake.UUID - generates a [unique id](https://github.com/twinj/uuid)
 
 ### Persistence
 
@@ -356,9 +356,9 @@ If you want to use that mode you need to pass the path to the folder where you w
 
 #### MongoDB
 
-To use MongoDB persistence you need to set the url connection string to the **config-persist-path**. The format of that url should be in the following format:  
-`mongodb://[user:pass@]host1[:port1][,host2[:port2],...]/database`  
-For example if you are using your local mongo the connection string might be **`mongodb://localhost/http-api-mock`**. In this mode the entity name in the [Persist](#persist-optional) define in which collection and with what ID the records to be stored and retrieved from. To achieve this the names should be in the following format:  
+To use MongoDB persistence you need to set the url connection string to the **config-persist-path**. The format of that url should be in the following format:
+`mongodb://[user:pass@]host1[:port1][,host2[:port2],...]/database`
+For example if you are using your local mongo the connection string might be **`mongodb://localhost/http-api-mock`**. In this mode the entity name in the [Persist](#persist-optional) define in which collection and with what ID the records to be stored and retrieved from. To achieve this the names should be in the following format:
 `collectionName/itemId`
 
 You can check the sample configurations for persistence in the following files:
@@ -382,7 +382,7 @@ If you make any changes, run ```go fmt ./...``` before submitting a pull request
 
 ### Licence
 
-Original work Copyright (c) 2016 [Jordi Martin](http://jordi.io)  
+Original work Copyright (c) 2016 [Jordi Martin](http://jordi.io)
 Modified work Copyright 2016 - 2018 [Vasil Trifonov](https://github.com/vtrifonov)
 
 Released under MIT license, see [LICENSE](LICENSE.md) for details.

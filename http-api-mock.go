@@ -33,11 +33,11 @@ func banner() {
 	fmt.Println("")
 
 	fmt.Print(
-		`		.---. .---. 
+		`		.---. .---.
                :     : o   :    me want request!
            _..-:   o :     :-.._    /
-       .-''  '  ` + "`" + `---' ` + "`" + `---' "   ` + "`" + `` + "`" + `-.    
-     .'   "   '  "  .    "  . '  "  ` + "`" + `.  
+       .-''  '  ` + "`" + `---' ` + "`" + `---' "   ` + "`" + `` + "`" + `-.
+     .'   "   '  "  .    "  . '  "  ` + "`" + `.
     :   '.---.,,.,...,.,.,.,..---.  ' ;
     ` + "`" + `. " ` + "`" + `.                     .' " .'
      ` + "`" + `.  '` + "`" + `.                   .' ' .'
@@ -48,7 +48,7 @@ func banner() {
     .'    "     '         "     "   ; ` + "`" + `.;";";";'
    ;         '       "       '     . ; .' ; ; ;
   ;     '         '       '   "    .'      .-'
-  '  "     "   '      "           "    _.-' 
+  '  "     "   '      "           "    _.-'
  `)
 	fmt.Println("")
 }
@@ -141,7 +141,7 @@ func main() {
 	sIP := flag.String("server-ip", outIP, "Mock server IP")
 	sPort := flag.Int("server-port", 8083, "Mock Server Port")
 	cIP := flag.String("console-ip", outIP, "Console Server IP")
-	cPort := flag.Int("cconsole-port", 8082, "Console server Port")
+	cPort := flag.Int("console-port", 8082, "Console server Port")
 	console := flag.Bool("console", true, "Console enabled  (true/false)")
 	cPath := flag.String("config-path", path, "Mocks definition folder")
 	cPersistPath := flag.String("config-persist-path", persistPath, "Path to the folder where requests can be persisted or connection string to mongo database starting with mongodb:// and having database at the end /DatabaseName")
@@ -149,8 +149,8 @@ func main() {
 	flag.Parse()
 	path, _ = filepath.Abs(*cPath)
 
-	if strings.Index(persistPath, "mongodb://") < 0 {
-		persistPath, _ = filepath.Abs(*cPersistPath)
+	if strings.Index(*cPersistPath, "mongodb://") < 0 {
+		*cPersistPath, _ = filepath.Abs(*cPersistPath)
 	}
 
 	//chanels
@@ -162,7 +162,7 @@ func main() {
 	mocks := getMocks(path, dUpdates)
 	router := getRouter(mocks, dUpdates)
 
-	persistEngineBag := loadVarsProcessorEngines(persistPath)
+	persistEngineBag := loadVarsProcessorEngines(*cPersistPath)
 	varsProcessor := getVarsProcessor(persistEngineBag)
 
 	go startServer(*sIP, *sPort, done, router, mLog, varsProcessor, logs)
