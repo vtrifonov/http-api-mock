@@ -1,6 +1,7 @@
 package persist
 
 import (
+	"github.com/Jeffail/gabs"
 	"github.com/vtrifonov/http-api-mock/definition"
 	"github.com/vtrifonov/http-api-mock/logging"
 	"github.com/vtrifonov/http-api-mock/utils"
@@ -43,7 +44,11 @@ func (ea EntityActions) ApplyActions(m *definition.Mock) {
 			return
 		}
 		if utils.IsJSON(content) && utils.IsJSON(value) {
-			content = utils.JoinJSON(content, value)
+
+			v1, _ := gabs.ParseJSON([]byte(content))
+			v2, _ := gabs.ParseJSON([]byte(value))
+
+			content = utils.JoinJSON(v1, v2).String()
 		} else if utils.IsJSON(content) && !utils.IsJSON(value) {
 			logging.Printf("There is no way to append this : %s\n", value)
 		} else {

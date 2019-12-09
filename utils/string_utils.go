@@ -2,58 +2,13 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
+	"github.com/Jeffail/gabs"
 	"net/url"
 
 	"strings"
 
-	"github.com/Jeffail/gabs"
 	"github.com/vtrifonov/http-api-mock/definition"
 )
-
-//ErrorPropertyMissingInJSON when there's no such property in the JSON document
-var ErrorPropertyMissingInJSON = errors.New("There is no such property in the JSON document")
-
-//IsJSON checks if a string is valid JSON or not
-func IsJSON(s string) bool {
-	var js map[string]interface{}
-	return json.Unmarshal([]byte(s), &js) == nil
-}
-
-//JoinJSON merges two JSON strings
-func JoinJSON(inputs ...string) string {
-	if len(inputs) == 1 {
-		return inputs[0]
-	}
-
-	result := gabs.New()
-	for _, input := range inputs {
-		jsonParsed, _ := gabs.ParseJSON([]byte(input))
-		children, _ := jsonParsed.S().ChildrenMap()
-
-		for key, child := range children {
-			value := child.Data()
-			stringValue := child.String()
-			// check if the value is again json or a primitive type
-			if strings.Index(stringValue, "{") == 0 || strings.Index(stringValue, "[") == 0 {
-				// if the value is JSON and we already have value for that key in the result
-				existingValue := result.S(key).String()
-				if existingValue == "{}" {
-					result.Set(value, key)
-				} else {
-					// merge the inner JSONs
-					joinedResult := JoinJSON(existingValue, stringValue)
-					valueToStore, _ := gabs.ParseJSON([]byte(joinedResult))
-					result.Set(valueToStore.Data(), key)
-				}
-			} else {
-				result.Set(value, key)
-			}
-		}
-	}
-
-	return result.String()
-}
 
 //JoinContent returns two contents joined as JSON if both are JSONs otherwise concatenates them
 func JoinContent(value1 string, value2 string) string {
@@ -62,7 +17,10 @@ func JoinContent(value1 string, value2 string) string {
 	} else if value2 == "" {
 		return value1
 	} else if (IsJSON(value1)) && IsJSON(value2) {
-		return JoinJSON(value1, value2)
+		v1, _ := gabs.ParseJSON([]byte(value1))
+		v2, _ := gabs.ParseJSON([]byte(value2))
+
+		return JoinJSON(v1, v2).String()
 	} else {
 		return value1 + "\n" + value2
 	}
