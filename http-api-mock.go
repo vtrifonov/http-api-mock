@@ -130,12 +130,12 @@ func getMocks(path string, updateCh chan []definition.Mock) []definition.Mock {
 func main() {
 	banner()
 	outIP := getOutboundIP()
-	path, err := filepath.Abs("../mock/config")
+	path, err := filepath.Abs("./config")
 	if err != nil {
 		panic(ErrNotFoundDefaultPath)
 	}
 
-	persistPath, _ := filepath.Abs("../mock/data")
+	persistPath, _ := filepath.Abs("./data")
 	//persistPath := "mongodb://localhost/http-api-mock"
 
 	sIP := flag.String("server-ip", outIP, "Mock server IP")
