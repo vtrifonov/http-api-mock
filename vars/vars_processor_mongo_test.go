@@ -1,6 +1,7 @@
 package vars
 
 import (
+	"github.com/Jeffail/gabs"
 	"testing"
 	"time"
 
@@ -427,7 +428,10 @@ func TestMongoPersister_LoadBody_WithAppend(t *testing.T) {
 	} else {
 		varsProcessor.Eval(&req, &mock)
 
-		if equal, err := utils.JSONSStringsAreEqual(mock.Response.Body, utils.JoinJSON(content, appendText)); !equal || err != nil {
+		v1, _ := gabs.ParseJSON([]byte(content))
+		v2, _ := gabs.ParseJSON([]byte(appendText))
+
+		if equal, err := utils.JSONSStringsAreEqual(mock.Response.Body, utils.JoinJSON(v1, v2).String()); !equal || err != nil {
 			t.Error("Result body and file content plus bodyAppend should be the same", mock.Response.Body, content, appendText)
 		}
 	}
